@@ -6,7 +6,7 @@
 
 基于 Python 实现登录和登出广东天翼校园网网页认证的命令行工具。可以用该工具来快速登录或登出广东天翼校园网，或者反复重新登录来重置限速状态，以 “破解” 限速。
 
-![4S13ct.png](https://z3.ax1x.com/2021/09/11/4S13ct.png)
+![4S13ct.png](https://s1.ax1x.com/2023/02/17/pSbyPpD.png)
 
 <br />
 
@@ -53,7 +53,7 @@ pip install click -i http://pypi.douban.com/simple --trusted-host pypi.douban.co
 
 设备刚连上校园网络时自动弹出的，或者已经连上但未登录时打开任意网页跳转到下面这个登录网页，其中有此程序要的参数：
 
-![4S1YB8.png](https://z3.ax1x.com/2021/09/11/4S1YB8.png)
+![4S1YB8.png](https://s1.ax1x.com/2023/02/17/pSbyi1e.png)
 
 1. `ESurfingURL` ：校园网登录网址（部分），需要带端口。未登录时可能会出现域名解析错误（未能连接DNS服务器），可以先手动登录校园网后，使用 ping 等网络工具解析，然后用 `IP:端口` 代替，例如：`125.88.59.131:10001`
 2. `WlanACIP` ：校园网的认证服务器IP，应该每个学校都不同；
@@ -201,7 +201,7 @@ Options:
 
 利用快捷方式，可以实现带参数启用程序：
 
-![4S1dhj.png](https://z3.ax1x.com/2021/09/11/4S1dhj.png)
+![4S1dhj.png](https://s1.ax1x.com/2023/02/17/pSby9fO.png)
 
 记得不要移动原文件，否则快捷方式会不可用。
 
