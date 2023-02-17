@@ -30,16 +30,18 @@ jobs:
     name: Build
     needs: release
     runs-on: ${{ matrix.os }}
+    env:
+      dist-name: ESurfingPy-CLI
     strategy:
       matrix:
         os: [windows-2019, ubuntu-20.04, macos-11.0]
-        python-version: [3.10]
+        python-version: ['3.10']
 
     steps:
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
-        python-version: '3.10'
+        python-version: ${{ matrix.python-version }}
         architecture: 'x64'
 
     - name: Check out
@@ -53,21 +55,21 @@ jobs:
 
     - name: Build for Windows
       if: ${{ matrix.os == 'windows-2019' }}
-      run: python -m nuitka --assume-yes-for-downloads --include-package-data=ddddocr --output-dir=dist --output-filename=ESurfingPy --remove-output --onefile main.py
+      run: python -m nuitka --assume-yes-for-downloads --include-package-data=ddddocr --output-dir=dist --output-filename=${{ env.dist-name }} --remove-output --onefile main.py
 
     - name: Build for Ubuntu & macOS
       if: ${{ matrix.os != 'windows-2019' }}
-      run: python3 -m nuitka --assume-yes-for-downloads --include-package-data=ddddocr --output-dir=dist --output-filename=ESurfingPy --remove-output --onefile main.py
+      run: python3 -m nuitka --assume-yes-for-downloads --include-package-data=ddddocr --output-dir=dist --output-filename=${{ env.dist-name }} --remove-output --onefile main.py
 
     - name: Package
       working-directory: dist
-      run: tar -zcvf ../ESurfingPy_${{ matrix.os }}.tar.gz -c ./*
+      run: tar -zcvf ../${{ env.dist-name }}_${{ matrix.os }}.tar.gz -c ./*
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v3
       with:
         name: ${{ runner.os }} Build
-        path: ESurfingPy_${{ matrix.os }}.tar.gz
+        path: ${{ env.dist-name }}_${{ matrix.os }}.tar.gz
 
     - name: Upload assets
       id: upload-release-asset
@@ -76,6 +78,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ needs.release.outputs.upload_url }}
-        asset_path: ESurfingPy_${{ matrix.os }}.tar.gz
-        asset_name: ESurfingPy_${{ matrix.os }}.tar.gz
+        asset_path: ${{ env.dist-name }}_${{ matrix.os }}.tar.gz
+        asset_name: ${{ env.dist-name }}_${{ matrix.os }}.tar.gz
         asset_content_type: application/gzip
