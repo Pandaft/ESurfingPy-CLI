@@ -1,12 +1,13 @@
 import click
-from . import esurfing
+from . import auto, esurfing
+from .ocr import ocr_image_file
 
 DEFAULT_ESURFING_URL = "enet.10000.gd.cn:10001"
 
 
 @click.group()
 def cli():
-    """(v0.19) 基于 Python 实现登录和登出广东天翼校园网网页认证通道的命令行工具。"""
+    """(v0.2.0) 基于 Python 实现登录和登出广东天翼校园网网页认证通道的命令行工具。"""
     pass
 
 
@@ -81,7 +82,7 @@ def auto(mode, value, autostop, esurfingurl, wlanacip, wlanuserip, account, pass
 @click.option('-img', '--imagefile', prompt='Image File:', help='图片路径')
 def ocr(imagefile):
     """识别验证码"""
-    succeed, result = ocr.ocr_img(imagefile)
+    succeed, result = ocr_image_file(imagefile)
     if succeed:
         click.echo(f'识别成功，识别结果：{result}')
     else:

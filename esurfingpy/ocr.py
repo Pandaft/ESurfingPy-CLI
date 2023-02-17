@@ -1,13 +1,13 @@
 import ddddocr
 
 
-def ocr_img(img_file):
-    """调用 ddddocr 识别验证码"""
+def ocr_image_file(img_file_path: str) -> (bool, str):
+    """通过 ddddocr 识别文字"""
     try:
-        ocr = ddddocr.DdddOcr()
-        with open(img_file, 'rb') as f:
+        with open(img_file_path, 'rb') as f:
             img_bytes = f.read()
-        result = ocr.classification(img_bytes)
-        return True, result
-    except Exception as Exc:
-        return False, Exc
+        ocr = ddddocr.DdddOcr(show_ad=False)
+        res = ocr.classification(img_bytes)
+        return True, res
+    except Exception as exc:
+        return False, str(exc)

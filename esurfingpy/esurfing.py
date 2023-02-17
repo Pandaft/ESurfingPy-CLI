@@ -148,7 +148,7 @@ def login(account: str, password: str,
             try:
                 log_time = time.time()
                 log("正在识别验证码...")
-                ocr_succeed, ocr_result = ocr.ocr_img(VCODE_FILE_PATH)
+                ocr_succeed, ocr_result = ocr.ocr_image_file(VCODE_FILE_PATH)
 
                 # 识别失败
                 if not ocr_succeed:
