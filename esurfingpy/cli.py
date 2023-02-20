@@ -2,12 +2,13 @@ import click
 from . import auto, esurfing
 from .ocr import ocr_image_file
 
+VERSION = "0.2.0"
 DEFAULT_ESURFING_URL = "enet.10000.gd.cn:10001"
 
 
 @click.group()
 def cli():
-    """(v0.2.0) 基于 Python 实现登录和登出广东天翼校园网网页认证通道的命令行工具。"""
+    """基于 Python 实现登录和登出广东天翼校园网网页认证通道的命令行工具。"""
     pass
 
 
@@ -88,3 +89,9 @@ def ocr(imagefile):
     else:
         click.echo(f'识别失败，错误信息：{result}')
     return result
+
+
+@cli.command()
+def version():
+    """输出版本"""
+    click.echo(VERSION)
