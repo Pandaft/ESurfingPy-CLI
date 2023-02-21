@@ -28,13 +28,13 @@
 
 ### 运行已编译的可执行文件
 
-> 程序打包了识别验证码所需的模型文件，因此文件体积较大。
+程序打包了识别验证码所需的模型文件，因此文件体积较大。
 
-由 GitHub Actions 自动构建并发布，下载链接：[Releases(发行版)](https://github.com/Pandaft/ESurfingPy-CLI/releases)
+由 GitHub Actions 自动编译并发布，下载链接：[Releases(发行版)](https://github.com/Pandaft/ESurfingPy-CLI/releases)
 
 ### 运行源码
 
-Linux 可能需要将 `pip` 换为 `pip3`， `python` 换为 `python3`。
+Python <= 3.10，Linux 可能需要将 `pip` 换为 `pip3`， `python` 换为 `python3`。
 
 ```shell
 git clone https://github.com/Pandaft/ESurfingPy-CLI.git
@@ -60,8 +60,6 @@ python main.py
 <br />
 
 ## 命令行（CLI）
-
-可以通过调用 main.py 或已经编译好的可执行文件（没有适合自己架构的可以自行编译）来快速使用。
 
 ```
 ./ESurfingPy-CLI.exe --help
