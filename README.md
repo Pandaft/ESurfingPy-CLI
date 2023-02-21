@@ -61,104 +61,106 @@ python main.py
 
 ## 命令行（CLI）
 
-```
-./ESurfingPy-CLI.exe --help
+```text
+> ./ESurfingPy-CLI.exe --help
 Usage: ESurfingPy-CLI.exe [OPTIONS] COMMAND [ARGS]...
 
-  (v0.2.0) 基于 Python 实现登录和登出广东天翼校园网网页认证通道的命令行工具。
+  基于 Python 实现登录和登出广东天翼校园网网页认证通道的命令行工具。
 
 Options:
   --help  Show this message and exit.
 
 Commands:
-  auto    多种模式触发重登校园网
-  login   登录校园网
-  logout  登出校园网
-  ocr     识别验证码
+  auto     多种模式触发重登校园网
+  login    登录校园网
+  logout   登出校园网
+  ocr      识别验证码
+  version  输出版本
 ```
 
 ### 登录
 
-``` 
-./ESurfingPy-CLI.exe login --help
+```text
+> ./ESurfingPy-CLI.exe login --help
 Usage: ESurfingPy-CLI.exe login [OPTIONS]
 
   登录校园网
 
 Options:
-  -url, --esurfingurl TEXT    校园网登录网址
-  -acip, --wlanacip TEXT      认证服务器IP
-  -userip, --wlanuserip TEXT  登录设备IP
-  -acc, --account TEXT        账号
-  -pwd, --password TEXT       密码
-  -detail BOOLEAN             输出详细过程
-  --help                      Show this message and exit.
+  -e, --esurfing-url TEXT  校园网登录网址
+  -c, --wlan-acip TEXT     认证服务器IP
+  -r, --wlan-userip TEXT   登录设备IP
+  -a, --account TEXT       账号
+  -p, --password TEXT      密码
+  -v, --verbose BOOLEAN    输出详细过程
+  --help                   Show this message and exit.
 ```
 
-**本机登录校园网的话，`-url`, `-acip`, `-userip` 可以不填，程序会尝试自动获取。**
+**本机登录校园网的话，`-e`, `-c`, `-r` 可以不填，程序会尝试自动获取。**
 
-示例：`./ESurfingPy-CLI.exe login -url 125.88.59.131:10001 -acip 123.123.123.123 -userip 234.234.234.234 -acc 15012341234 -pwd 12345678 -details true`
+示例：`./ESurfingPy-CLI.exe login -e 125.88.59.131:10001 -c 123.123.123.123 -r 234.234.234.234 -a 15012341234 -p 12345678 -v true`
 
 ### 登出
 
-```
-./ESurfingPy-CLI.exe logout --help
+```text
+> ./ESurfingPy-CLI.exe logout --help
 Usage: ESurfingPy-CLI.exe logout [OPTIONS]
 
   登出校园网
 
 Options:
-  -url, --esurfingurl TEXT    校园网登录网址
-  -acip, --wlanacip TEXT      认证服务器IP
-  -userip, --wlanuserip TEXT  登录设备IP
-  -acc, --account TEXT        账号
-  -pwd, --password TEXT       密码
-  -sign, --signature TEXT     签名
-  -detail BOOLEAN             输出详细过程
-  --help                      Show this message and exit.
+  -e, --esurfing-url TEXT  校园网登录网址
+  -c, --wlan-acip TEXT     认证服务器IP
+  -r, --wlan-userip TEXT   登录设备IP
+  -a, --account TEXT       账号
+  -p, --password TEXT      密码
+  -s, --signature TEXT     签名
+  -v, --verbose BOOLEAN    输出详细过程
+  --help                   Show this message and exit.
 ```
 
-登出需要 `signature` ，不需要 `password`，因此填了签名可以不填密码；
-
-如果没有签名，可以不填签名，填密码，程序会尝试登录来获取 `signature` 然后再登出。
+- 如果填写了 `signature` ，不需要填写 `password` ；
+- 如果没有填写 `signature` ，需要填写账号和密码，程序会尝试登录来获取 `signature` 然后再登出。
 
 `signature` 可以登录获得（即使重复登录），可以自己写程序将登录时返回的 `signature` 保存下来，需要时再读取使用。
 
-示例：`./ESurfingPy-CLI.exe logout -url 125.88.59.131:10001 -acip 123.123.123.123 -userip 234.234.234.234 -acc 15012341234 -sign XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX -details true`
+示例：`./ESurfingPy-CLI.exe logout -e 125.88.59.131:10001 -c 123.123.123.123 -r 234.234.234.234 -a 15012341234 -s XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX -v true`
 
 ### 识别验证码
 
-``` ESurfingPy-CLI.exe ocr --help
+```text
+> ESurfingPy-CLI.exe ocr --help
 Usage: ESurfingPy-CLI.exe ocr [OPTIONS]
 
   识别验证码
 
 Options:
-  -img, --imagefile TEXT  图片路径
-  --help                  Show this message and exit.
+  -i, --image TEXT  图片路径
+  --help            Show this message and exit.
 ```
 
-示例：`./ESurfingPy-CLI.exe ocr -img code.png`
+示例：`./ESurfingPy-CLI.exe ocr -i code.png`
 
 ### 多种模式自动重登
 
-```
-./ESurfingPy-CLI.exe auto --help
+```text
+> ./ESurfingPy-CLI.exe auto --help
 Usage: ESurfingPy-CLI.exe auto [OPTIONS]
 
   多种模式触发重登校园网
 
 Options:
-  -m, --mode TEXT             触发模式
-  -v, --value TEXT            触发网速(MB/s)或流量(MB)或时间(s)
-  -as, --autostop BOOLEAN     自动停止
-  -url, --esurfingurl TEXT    校园网登录网址
-  -acip, --wlanacip TEXT      认证服务器IP
-  -userip, --wlanuserip TEXT  登录设备IP
-  -acc, --account TEXT        账号
-  -pwd, --password TEXT       密码
-  -detail BOOLEAN             输出详细过程
-  --help                      Show this message and exit.
+  -m, --mode [uls|dls|ult|dlt|itv|mul]
+                                  触发模式
+  -v, --value TEXT                触发网速(MB/s)或流量(MB)或时间(s)
+  -s, --auto-stop BOOLEAN         自动停止
+  -e, --esurfing-url TEXT         校园网登录网址
+  -c, --wlan-acip TEXT            认证服务器IP
+  -r, --wlan-userip TEXT          登录设备IP
+  -a, --account TEXT              账号
+  -p, --password TEXT             密码
+  -v, --verbose BOOLEAN           输出详细过程
+  --help                          Show this message and exit.
 ```
 
 触发模式：
@@ -176,11 +178,11 @@ Options:
 
 + 实时监控上传速率，连续 10s 低于 3MB/s 时自动重登：
 
-`./ESurfingPy-CLI.exe auto -m uls -v 3 -as true -url 125.88.59.131:10001 -acip 123.123.123.123 -userip 234.234.234.234 -acc 15012341234 -pwd 12345678 -details true`
+`./ESurfingPy-CLI.exe auto -m uls -v 3 -s true -e 125.88.59.131:10001 -c 123.123.123.123 -r 234.234.234.234 -a 15012341234 -p 12345678 -v true`
 
 + 实时监控下载流量，达到 600MB 时自动重登：（-as 在此无效，随意输入就行）
 
-`./ESurfingPy-CLI.exe auto -m dlt -v 600 -as true -url 125.88.59.131:10001 -acip 123.123.123.123 -userip 234.234.234.234 -acc 15012341234 -pwd 12345678 -details true`
+`./ESurfingPy-CLI.exe auto -m dlt -v 600 -s true -e 125.88.59.131:10001 -c 123.123.123.123 -r 234.234.234.234 -a 15012341234 -p 12345678 -v true`
 
 <br />
 
