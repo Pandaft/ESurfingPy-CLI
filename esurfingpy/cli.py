@@ -13,7 +13,7 @@ def cli():
 
 
 @cli.command()
-@click.option('-e', '--esurfing-url', default=DEFAULT_ESURFING_URL, help='校园网登录网址')
+@click.option('-u', '--esurfing-url', default=DEFAULT_ESURFING_URL, help='校园网登录网址')
 @click.option('-c', '--wlan-acip', help='认证服务器IP')
 @click.option('-r', '--wlan-userip', help='登录设备IP')
 @click.option('-a', '--account', prompt='账号', help='账号')
@@ -29,7 +29,7 @@ def login(esurfing_url, wlan_acip, wlan_userip, account, password, verbose):
 
 
 @cli.command()
-@click.option('-e', '--esurfing-url', prompt='校园网登录网址', default=DEFAULT_ESURFING_URL, help='校园网登录网址')
+@click.option('-u', '--esurfing-url', default=DEFAULT_ESURFING_URL, help='校园网登录网址')
 @click.option('-c', '--wlan-acip', prompt='认证服务器IP', help='认证服务器IP')
 @click.option('-r', '--wlan-userip', prompt='登录设备IP', help='登录设备IP')
 @click.option('-a', '--account', prompt='账号', help='账号')
@@ -50,9 +50,9 @@ def logout(esurfing_url, wlan_acip, wlan_userip, account, password, signature, v
 @click.option('-m', '--mode', prompt='触发模式', help='触发模式', type=click.Choice(["uls", "dls", "ult", "dlt", "itv", "mul"], case_sensitive=False))
 @click.option('-v', '--value', prompt='触发阈值', help='触发网速(MB/s)或流量(MB)或时间(s)')
 @click.option('-s', '--auto-stop', prompt='自动停止', default=True, type=bool, help='自动停止')
-@click.option('-e', '--esurfing-url', prompt='校园网登录网址', default=DEFAULT_ESURFING_URL, help='校园网登录网址')
-@click.option('-c', '--wlan-acip', prompt='认证服务器IP', help='认证服务器IP')
-@click.option('-r', '--wlan-userip', prompt='登录设备IP', help='登录设备IP')
+@click.option('-u', '--esurfing-url', default=DEFAULT_ESURFING_URL, help='校园网登录网址')
+@click.option('-c', '--wlan-acip', help='认证服务器IP')
+@click.option('-r', '--wlan-userip', help='登录设备IP')
 @click.option('-a', '--account', prompt='账号', help='账号')
 @click.option('-p', '--password', prompt='密码', help='密码')
 @click.option('-v', '--verbose', type=bool, default=True, help='输出详细过程')
