@@ -18,7 +18,7 @@ class ESurfing:
                  esurfingurl: str = DEFAULT_ESURFING_URL,
                  wlanacip: str = "",
                  wlanuserip: str = "",
-                 detail: bool = True):
+                 verbose: bool = True):
         """实例化"""
         self.account = account
         self.password = password
@@ -29,7 +29,7 @@ class ESurfing:
             self.esurfingurl = esurfingurl
             self.wlanacip = wlanacip
             self.wlanuserip = wlanuserip
-        self.detail = detail
+        self.verbose = verbose
 
     def login(self):
         """登录"""
@@ -38,7 +38,7 @@ class ESurfing:
                              esurfingurl=self.esurfingurl,
                              wlanacip=self.wlanacip,
                              wlanuserip=self.wlanuserip,
-                             detail=self.detail)
+                             verbose=self.verbose)
         if login_result[0]:
             self.signature = login_result[1]
         return login_result
@@ -51,10 +51,10 @@ class ESurfing:
                       esurfingurl=self.esurfingurl,
                       wlanacip=self.wlanacip,
                       wlanuserip=self.wlanuserip,
-                      detail=self.detail)
+                      verbose=self.verbose)
 
 
-def get_parameters(detail: bool = False):
+def get_parameters(verbose: bool = False):
     """
     获取 esurfingurl, wlanacip, wlanuserip 参数
     本机未登录校园网时才可通过此方法获取上述参数
@@ -66,24 +66,24 @@ def get_parameters(detail: bool = False):
         wlanuserip = re.search("wlanuserip=(.+)", response.url).group(1)
         return True, esurfingurl, wlanacip, wlanuserip
     except Exception as exc:
-        if detail:
+        if verbose:
             logs.log(f"获取参数失败：{exc}")
         return False, None, None, None
 
 
 def login(account: str, password: str,
           esurfingurl: str = DEFAULT_ESURFING_URL, wlanacip: str = "", wlanuserip: str = "",
-          detail: bool = True):
+          verbose: bool = True):
     """
     登录校园网
     account, password 必填参数；
     esurfingurl, wlanacip, wlanuserip 选填参数，本机登录且未登录时可自动获取；
-    detail: 选填参数，输出过程。
+    verbose: 选填参数，输出过程。
     """
 
     # 日志
     def log(text):
-        if detail:
+        if verbose:
             logs.log(text)
         return text
 
@@ -104,9 +104,9 @@ def login(account: str, password: str,
         if not success:
             return False, log("获取失败")
         log("获取成功：")
-        log(f"ESurfingUrl: {esurfingurl}")
-        log(f"WlanACIP: {wlanacip}")
-        log(f"WlanUserIP: {wlanuserip}")
+        log(f"  - ESurfingUrl: {esurfingurl}")
+        log(f"  - WlanACIP: {wlanacip}")
+        log(f"  - WlanUserIP: {wlanuserip}")
 
     while True:
         session = requests.session()
@@ -220,7 +220,7 @@ def login(account: str, password: str,
         elif result_code == '13005000':
             log(result_info)
             log_data['times'] += 1
-            continue
+            return False, log("认证超时")
 
         # 禁止网页认证
         elif result_code == '13018000':
@@ -234,18 +234,18 @@ def login(account: str, password: str,
 def logout(account: str,
            wlanacip: str, wlanuserip: str, esurfingurl: str = DEFAULT_ESURFING_URL,
            password: str = "", signature: str = "",
-           detail: bool = True):
+           verbose: bool = True):
     """
     登出校园网
     account 必填参数；
     esurfingurl, wlanacip, wlanuserip 必填参数；
     password, signature 至少填一项参数；
-    detail: 选填参数，输出过程。
+    verbose: 选填参数，输出过程。
     """
 
     # 日志
     def log(text):
-        if detail:
+        if verbose:
             logs.log(text)
         return text
 
@@ -264,10 +264,10 @@ def logout(account: str,
         return False, log("登出失败：缺少 ESurfingUrl, WlanACIP, WlanUserIP 参数")
 
     # 缺少 signature
-    if signature == '':
+    if not signature:
         # 尝试通过登录获取
         log('缺少 signature 参数，正在尝试通过登录获取该参数...')
-        login_result = login(account, password, esurfingurl, wlanacip, wlanuserip, detail)
+        login_result = login(account, password, esurfingurl, wlanacip, wlanuserip, verbose)
 
         # 登录失败
         if not login_result[0]:
@@ -301,7 +301,7 @@ def logout(account: str,
     # 登出成功 / 重复登出
     if result_code == '0':
         time_taken = round(time.time() - log_data["time"], 2)
-        return True, f'登出成功，耗时 {time_taken}s'
+        return True, log(f'登出成功，耗时 {time_taken}s')
 
     # 登出失败
     return False, log(f'登出失败，返回状态码：{result_code} 信息：{result_info}')

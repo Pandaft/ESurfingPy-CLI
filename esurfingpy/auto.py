@@ -156,7 +156,7 @@ def manual_mode(esf: ESurfing):
             return log(f"登录失败")
 
 
-def relogin(esf: ESurfing, mode: str, value: float, autostop: bool):
+def relogin(esf: ESurfing, mode: str, value: float, auto_stop: bool):
     """
         uls, upload_speed     - 上行速率低于指定值时自动重登校园网
         dls, download_speed   - 下载速率低于指定值时自动重登校园网
@@ -190,7 +190,7 @@ def relogin(esf: ESurfing, mode: str, value: float, autostop: bool):
                         continue
 
     if mode in ["uls", "dls"]:
-        speed_mode(esf, mode, value, autostop)
+        speed_mode(esf, mode, value, auto_stop)
     elif mode in ["ult", "dlt"]:
         traffic_mode(esf, mode, value)
     elif mode == "itv":
