@@ -1,6 +1,8 @@
+import os
+import time
 import click
 from . import auto, esurfing
-from .ocr import ocr_image_file
+from .ocr import ocr_image
 
 VERSION = "0.2.0"
 DEFAULT_ESURFING_URL = "enet.10000.gd.cn:10001"
@@ -79,13 +81,31 @@ def auto(mode, value, auto_stop, esurfing_url, wlan_acip, wlan_userip, account, 
 
 @cli.command()
 @click.option('-i', '--image', prompt='图片路径', help='图片路径')
-def ocr(image):
-    """识别验证码"""
-    succeed, result = ocr_image_file(image)
+def ocr(image: str) -> None | str:
+    """识别图片"""
+    # 文件不存在
+    if not os.path.isfile(image):
+        click.echo("错误：目标图片文件不存在")
+        return None
+
+    # 读取图片
+    try:
+        with open(image, "rb") as f:
+            image_bytes = f.read()
+    except PermissionError:
+        click.echo("读取图片失败，请确保程序具有读取权限")
+        return None
+
+    # 识别图片
+    log_time = time.time()
+    succeed, result = ocr_image(image_bytes)
+    time_taken = round(time.time() - log_time, 2)
+
+    # 返回结果
     if succeed:
-        click.echo(f'识别成功，识别结果：{result}')
+        click.echo(f'识别成功，识别结果：{result}  耗时：{time_taken}s')
     else:
-        click.echo(f'识别失败，错误信息：{result}')
+        click.echo(f'识别失败，错误信息：{result}  耗时：{time_taken}s')
     return result
 
 
