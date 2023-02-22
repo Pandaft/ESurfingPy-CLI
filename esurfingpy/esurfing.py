@@ -126,19 +126,18 @@ def login(account: str, password: str,
             log('正在获取验证码网址...')
             vcode_path = re.search('/common/image_code\.jsp\?time=\d+', str(resp.content)).group()
             vcode_url = f'http://{esurfingurl}{vcode_path}'
-            log(f"正则匹配验证码网址成功: {vcode_url}")
         except Exception as exc:
-            return False, log(f"正则匹配验证码网址失败：{exc}")
+            return False, log(f"获取验证码网址失败：{exc}")
 
         while True:
             # 获取并保存验证码
             try:
-                log("正在请求获取验证码...")
+                log("正在获取验证码图片...")
                 resp = session.get(url=vcode_url)
-                log("请求获取验证码成功")
+                log("获取验证码图片成功")
 
                 # 保存到本地
-                with open(VCODE_FILE_PATH, 'wb') as vcode_file:  # 保存到 Code.jpg
+                with open(VCODE_FILE_PATH, 'wb') as vcode_file:
                     vcode_file.write(resp.content)
                     log(f"已保存验证码图片到 {VCODE_FILE_PATH}")
             except Exception as exc:
@@ -152,7 +151,7 @@ def login(account: str, password: str,
 
                 # 识别失败
                 if not ocr_succeed:
-                    return False, log(f"识别验证码时发生错误：{ocr_result}")
+                    return False, log(f"识别验证码失败：{ocr_result}")
                 if len(ocr_result) < 4:
                     log("验证码识别结果不符合条件，重新获取新的验证码...")
                     continue
@@ -178,14 +177,14 @@ def login(account: str, password: str,
 
         # 发送登录请求
         try:
-            log('发送登录请求...')
+            log('正在发送登录请求...')
             resp = requests.post(
                 url=f'http://{esurfingurl}/ajax/login',
                 headers={
                     "Cookie": f"'loginUser={account}; JSESSIONID={session.cookies.get('JSESSIONID')}'",
                     "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
                 },
-                data='loginKey=' + login_key + '&wlanuserip=' + wlanuserip + '&wlanacip=' + wlanacip
+                data=f"loginKey={login_key}&wlanuserip={wlanuserip}&wlanacip={wlanacip}"
             )
             if not resp.ok:
                 return False, log(f"登录请求回应异常，HTTP 状态码：{resp.status_code}，返回文本：{resp.text}")
@@ -228,7 +227,7 @@ def login(account: str, password: str,
 
         # 其他情况
         else:
-            return False, log(f"登录失败，resultCode：{result_code}  resultInfo：{result_info}")
+            return False, log(f"登录失败，返回码：{result_code}  信息：{result_info}")
 
 
 def logout(account: str,
@@ -275,11 +274,11 @@ def logout(account: str,
 
         # 登录成功
         signature = login_result[1]
-        log(f'获取成功，sinature: {signature}')
+        log(f'获取成功，signature: {signature}')
 
     # 请求登出
     try:
-        log('发送登出请求...')
+        log('正在发送登出请求...')
         resp = requests.post(
             url=f'http://{esurfingurl}/ajax/logout',
             headers={
@@ -287,7 +286,7 @@ def logout(account: str,
                 'Cookie': f'signature={signature}; loginUser={account}',
                 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
             },
-            data='wlanuserip=' + wlanuserip + '&wlanacip=' + wlanacip
+            data=f"wlanuserip={wlanuserip}&wlanacip={wlanacip}"
         )
         if not resp.ok:
             return False, log(f"登出请求回应异常，HTTP 状态码：{resp.status_code}，返回文本：{resp.text}")
@@ -304,4 +303,4 @@ def logout(account: str,
         return True, log(f'登出成功，耗时 {time_taken}s')
 
     # 登出失败
-    return False, log(f'登出失败，返回状态码：{result_code} 信息：{result_info}')
+    return False, log(f'登出失败，返回码：{result_code}  信息：{result_info}')
