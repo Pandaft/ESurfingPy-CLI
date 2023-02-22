@@ -1,11 +1,9 @@
-import os
 import re
 import json
 import time
 import requests
 from . import ocr, rsa, logs
 
-VCODE_FILE_PATH = "./vcode.jpg"
 DEFAULT_ESURFING_URL = "enet.10000.gd.cn:10001"
 
 
@@ -135,19 +133,15 @@ def login(account: str, password: str,
                 log("正在获取验证码图片...")
                 resp = session.get(url=vcode_url)
                 log("获取验证码图片成功")
-
-                # 保存到本地
-                with open(VCODE_FILE_PATH, 'wb') as vcode_file:
-                    vcode_file.write(resp.content)
-                    log(f"已保存验证码图片到 {VCODE_FILE_PATH}")
             except Exception as exc:
                 return False, log(f"请求获取验证码失败：{exc}")
 
             # 识别验证码
             try:
-                log_time = time.time()
                 log("正在识别验证码...")
-                ocr_succeed, ocr_result = ocr.ocr_image_file(VCODE_FILE_PATH)
+                log_time = time.time()
+                ocr_succeed, ocr_result = ocr.ocr_image(resp.content)
+                time_taken = round(time.time() - log_time, 2)
 
                 # 识别失败
                 if not ocr_succeed:
@@ -158,9 +152,7 @@ def login(account: str, password: str,
 
                 # 识别成功
                 ocr_result = ocr_result[0:4]
-                time_taken = round(time.time() - log_time, 2)
                 log(f'识别验证码成功：{ocr_result}  耗时：{time_taken}s')
-                os.remove(VCODE_FILE_PATH)  # 删除验证码文件
                 break
             except Exception as exc:
                 return False, log(f"识别验证码失败：{exc}")

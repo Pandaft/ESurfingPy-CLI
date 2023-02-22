@@ -4,7 +4,7 @@ import click
 from . import auto, esurfing
 from .ocr import ocr_image
 
-VERSION = "0.2.0"
+VERSION = "0.2.3"
 DEFAULT_ESURFING_URL = "enet.10000.gd.cn:10001"
 
 
