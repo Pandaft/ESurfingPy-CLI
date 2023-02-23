@@ -1,10 +1,11 @@
 import os
 import time
 import click
-from . import auto, esurfing
+from . import esurfing
+from .auto import relogin
 from .ocr import ocr_image
 
-VERSION = "0.2.3"
+VERSION = "0.2.4"
 DEFAULT_ESURFING_URL = "enet.10000.gd.cn:10001"
 
 
@@ -50,7 +51,7 @@ def logout(esurfing_url, wlan_acip, wlan_userip, account, password, signature, v
 
 @cli.command()
 @click.option('-m', '--mode', prompt='触发模式', help='触发模式', type=click.Choice(["uls", "dls", "ult", "dlt", "itv", "mul"], case_sensitive=False))
-@click.option('-v', '--value', prompt='触发阈值', help='触发网速(MB/s)或流量(MB)或时间(s)')
+@click.option('-v', '--value', prompt='触发阈值', type=float, help='触发网速(MB/s)或流量(MB)或时间(s)')
 @click.option('-s', '--auto-stop', prompt='自动停止', default=True, type=bool, help='自动停止')
 @click.option('-u', '--esurfing-url', default=DEFAULT_ESURFING_URL, help='校园网登录网址')
 @click.option('-c', '--wlan-acip', help='认证服务器IP')
@@ -76,7 +77,7 @@ def auto(mode, value, auto_stop, esurfing_url, wlan_acip, wlan_userip, account, 
         wlanuserip=wlan_userip,
         verbose=verbose
     )
-    return auto.relogin(esf, mode, value, auto_stop)
+    return relogin(esf, mode, value, auto_stop)
 
 
 @cli.command()

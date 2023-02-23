@@ -8,11 +8,11 @@ log = logs.log
 
 def get_speed(obj_type: str) -> float:
     """获取当前上行或下行速率"""
-    if obj_type == "upload":
+    if obj_type in ["uls", "ult"]:
         before = psutil.net_io_counters().bytes_sent
         time.sleep(1)
         delta = psutil.net_io_counters().bytes_sent - before
-    elif obj_type == "download":
+    elif obj_type in ["dls", "dlt"]:
         before = psutil.net_io_counters().bytes_recv
         time.sleep(1)
         delta = psutil.net_io_counters().bytes_recv - before
@@ -23,9 +23,9 @@ def get_speed(obj_type: str) -> float:
 
 def get_traffic(obj_type: str) -> float:
     """获得当前上传或下载流量"""
-    if obj_type == "upload":
+    if obj_type in ["uls", "ult"]:
         traffic = psutil.net_io_counters().bytes_sent
-    elif obj_type == "download":
+    elif obj_type in ["dls", "dlt"]:
         traffic = psutil.net_io_counters().bytes_recv
     else:
         traffic = 0
@@ -35,17 +35,19 @@ def get_traffic(obj_type: str) -> float:
 def speed_mode(esf: ESurfing, mode: str, value: float, auto_stop: bool):
     """上行或下载速率低于指定值时自动重登校园网"""
 
-    if mode == "upload":
+    if mode == "uls":
         mode_str = "上传"
-    elif mode == "download":
+    elif mode == "dls":
         mode_str = "下载"
     else:
-        return
+        return log("模式参数错误")
 
-    log("尝试登录获取 signature ……")
-    login_result = esf.login()
-    if not login_result[0]:
-        return log("登录失败")
+    # 获取 signature 参数
+    if not esf.signature:
+        log("尝试登录获取 signature ……")
+        success, message = esf.login()
+        if not success:
+            return log(f"登录失败：{message}")
 
     low_times = 0  # 低速次数
     seem_done = 0  # 低于 0.1 MB/s 时判定疑似传输完成的次数
@@ -74,13 +76,16 @@ def speed_mode(esf: ESurfing, mode: str, value: float, auto_stop: bool):
             # 速率低于指定值，疑似被限速
             low_times += 1
             if low_times == 11:
+                log()
                 log(f"检测到连续 10s {mode_str}速率低于 {value} MB/s，疑似被限速，重新登录中……")
                 if not esf.logout():
                     return log("登出失败")
+                time.sleep(2.5)  # 避免认证超时
                 if not esf.login():
                     return log("登录失败")
                 low_times, seem_done = 0, 0
                 log_traffic = get_traffic(mode)
+                log()
         else:
             # 速率高于指定值
             low_times = 0
@@ -90,32 +95,34 @@ def speed_mode(esf: ESurfing, mode: str, value: float, auto_stop: bool):
 def traffic_mode(esf: ESurfing, mode: str, value: float):
     """上传或下载流量达到指定值时自动重登校园网"""
 
-    if mode == "3":
-        mode = "upload"
+    if mode == "ult":
         mode_str = "上传"
-    elif mode == "4":
-        mode = "download"
+    elif mode == "dlt":
         mode_str = "下载"
     else:
-        return
+        return log("模式参数错误")
 
-    log("首次登录尝试获取 signature ……")
-    if not esf.login():
-        return log(f"登录失败")
+    # 获取 signature 参数
+    if not esf.signature:
+        log("首次登录尝试获取 signature ……")
+        if not esf.login():
+            return log(f"登录失败")
 
     log_traffic = get_traffic(mode)
     while True:
         delta = round((get_traffic(mode) - log_traffic) / 1024 / 1024, 2)
-        speed = get_speed(mode_str)
+        speed = get_speed(mode)
         log(f"{mode_str}速率：{speed} MB/s  流量触发：{delta}/{value} MB", rewrite=True)
         if delta >= value:
             log()
             log("重新登录中")
             if not esf.logout():
                 return log("登出失败")
-            if not esf.logout()[0]:
+            time.sleep(2.5)  # 避免认证超时
+            if not esf.login()[0]:
                 return log(f"登录失败")
             log_traffic = get_traffic(mode)
+            log()
 
 
 def interval_mode(esf: ESurfing, value):
@@ -131,10 +138,11 @@ def interval_mode(esf: ESurfing, value):
         log(f"即将于 {value - time_cal}s 后重新登录", rewrite=True)
         time.sleep(1)
         if value - time_cal == 0:
-            print()
-            log("正在重新登录\n", rewrite=True)
+            log()
+            log("正在重新登录")
             if not esf.logout()[0]:
                 return log("登录失败")
+            time.sleep(2.5)  # 避免认证超时
             if not esf.login()[0]:
                 return log("登出失败")
             time_cal = 0
@@ -165,36 +173,22 @@ def relogin(esf: ESurfing, mode: str, value: float, auto_stop: bool):
         itv, interval         - 间隔指定的时间自动重登校园网
         mul, manual           - 手动按回车后自动重登校园网
     """
-    while True:
-        if mode not in ["uls", "dls", "ult", "dlt", "itv", "mul"]:
-            print("触发模式：\n"
-                  "uls, upload_speed     - 上行速率低于指定值时自动重登校园网\n"
-                  "dls, download_speed   - 下载速率低于指定值时自动重登校园网\n"
-                  "ult, upload_traffic   - 上传流量达到指定值时自动重登校园网\n"
-                  "dlt, download_traffic - 下载流量达到指定值时自动重登校园网\n"
-                  "itv, interval         - 间隔指定的时间自动重登校园网\n"
-                  "mul, manual           - 手动按回车后自动重登校园网")
-            mode = input("请选择正确的触发模式：")
-            if mode in ["uls", "dls", "ult", "dlt", "itv", "mul"]:
-                break
-            else:
-                continue
-        else:
-            if mode != "mul":
-                while True:
-                    try:
-                        value = float(value)
-                        break
-                    except:
-                        value = input("请输入正确的触发值（单位：MB/s, MB, s）：")
-                        continue
 
+    # 速率模式
     if mode in ["uls", "dls"]:
-        speed_mode(esf, mode, value, auto_stop)
+        return speed_mode(esf, mode, value, auto_stop)
+
+    # 流量模式
     elif mode in ["ult", "dlt"]:
-        traffic_mode(esf, mode, value)
+        return traffic_mode(esf, mode, value)
+
+    # 间隔模式
     elif mode == "itv":
-        interval_mode(esf, value)
+        return interval_mode(esf, value)
+
+    # 手动模式
     elif mode == "mul":
-        manual_mode(esf)
-    return
+        return manual_mode(esf)
+
+    # 模式错误
+    return log("模式参数错误")
