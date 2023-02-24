@@ -5,7 +5,7 @@ from . import esurfing
 from .auto import relogin
 from .ocr import ocr_image
 
-VERSION = "0.2.4"
+VERSION = "0.2.5"
 DEFAULT_ESURFING_URL = "enet.10000.gd.cn:10001"
 
 

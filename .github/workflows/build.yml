@@ -36,11 +36,11 @@ jobs:
 
     - name: Build for Windows
       if: ${{ matrix.os == 'windows-2019' }}
-      run: python -m nuitka --assume-yes-for-downloads --include-package-data=ddddocr --output-dir=dist --output-filename=${{ env.dist-name }} --remove-output --onefile main.py
+      run: python build.py
 
     - name: Build for Ubuntu & macOS
       if: ${{ matrix.os != 'windows-2019' }}
-      run: python3 -m nuitka --assume-yes-for-downloads --include-package-data=ddddocr --output-dir=dist --output-filename=${{ env.dist-name }} --remove-output --onefile main.py
+      run: python3 build.py
 
     - name: Package
       working-directory: dist
