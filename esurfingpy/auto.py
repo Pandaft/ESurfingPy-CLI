@@ -6,30 +6,36 @@ from .esurfing import ESurfing
 log = logs.log
 
 
-def get_speed(obj_type: str) -> float:
-    """获取当前上行或下行速率"""
-    if obj_type in ["uls", "ult"]:
-        before = psutil.net_io_counters().bytes_sent
-        time.sleep(1)
-        delta = psutil.net_io_counters().bytes_sent - before
-    elif obj_type in ["dls", "dlt"]:
-        before = psutil.net_io_counters().bytes_recv
-        time.sleep(1)
-        delta = psutil.net_io_counters().bytes_recv - before
-    else:
-        return 0
-    return round(delta / 1024 / 1024, 2)  # 转为 x.xx (MB/s)
+class Net:
+    class Upload:
 
+        @classmethod
+        def speed(cls) -> float:
+            """上传速度（MB/s)"""
+            before = cls.traffic()
+            time.sleep(1)
+            after = cls.traffic()
+            return round(after - before, 2)
 
-def get_traffic(obj_type: str) -> float:
-    """获得当前上传或下载流量"""
-    if obj_type in ["uls", "ult"]:
-        traffic = psutil.net_io_counters().bytes_sent
-    elif obj_type in ["dls", "dlt"]:
-        traffic = psutil.net_io_counters().bytes_recv
-    else:
-        traffic = 0
-    return traffic
+        @staticmethod
+        def traffic() -> float:
+            """上传流量（MB）"""
+            return round(psutil.net_io_counters().bytes_sent / 1024 / 1024, 2)
+
+    class Download:
+
+        @classmethod
+        def speed(cls) -> float:
+            """下载速度（MB/s)"""
+            before = cls.traffic()
+            time.sleep(1)
+            after = cls.traffic()
+            return round(after - before, 2)
+
+        @staticmethod
+        def traffic() -> float:
+            """下载流量（MB）"""
+            return round(psutil.net_io_counters().bytes_recv / 1024 / 1024, 2)
 
 
 def speed_mode(esf: ESurfing, mode: str, value: float, auto_stop: bool):
@@ -37,8 +43,12 @@ def speed_mode(esf: ESurfing, mode: str, value: float, auto_stop: bool):
 
     if mode == "uls":
         mode_str = "上传"
+        get_traffic = Net.Upload.traffic
+        get_speed = Net.Upload.speed
     elif mode == "dls":
         mode_str = "下载"
+        get_traffic = Net.Download.traffic
+        get_speed = Net.Download.speed
     else:
         return log("模式参数错误")
 
@@ -51,12 +61,12 @@ def speed_mode(esf: ESurfing, mode: str, value: float, auto_stop: bool):
 
     low_times = 0  # 低速次数
     seem_done = 0  # 低于 0.1 MB/s 时判定疑似传输完成的次数
-    log_traffic = get_traffic(mode)
+    log_traffic = get_traffic()
 
     while True:
-        speed = get_speed(mode)
-        now_traffic = get_traffic(mode) - log_traffic
-        log(f"本次流量：{round(now_traffic / 1024 / 1024, 2)} MB\t"
+        speed = get_speed()
+        now_traffic = get_traffic() - log_traffic
+        log(f"本次流量：{now_traffic} MB\t"
             f"{mode_str}速度：{speed} MB/s\t"
             f"低速触发：{low_times}/10\t"
             f"完成触发：{seem_done}/10", rewrite=True)
@@ -84,7 +94,7 @@ def speed_mode(esf: ESurfing, mode: str, value: float, auto_stop: bool):
                 if not esf.login():
                     return log("登录失败")
                 low_times, seem_done = 0, 0
-                log_traffic = get_traffic(mode)
+                log_traffic = get_traffic()
                 log()
         else:
             # 速率高于指定值
@@ -97,8 +107,12 @@ def traffic_mode(esf: ESurfing, mode: str, value: float):
 
     if mode == "ult":
         mode_str = "上传"
+        get_traffic = Net.Upload.traffic
+        get_speed = Net.Upload.speed
     elif mode == "dlt":
         mode_str = "下载"
+        get_traffic = Net.Download.traffic
+        get_speed = Net.Download.speed
     else:
         return log("模式参数错误")
 
@@ -108,10 +122,10 @@ def traffic_mode(esf: ESurfing, mode: str, value: float):
         if not esf.login():
             return log(f"登录失败")
 
-    log_traffic = get_traffic(mode)
+    log_traffic = get_traffic()
     while True:
-        delta = round((get_traffic(mode) - log_traffic) / 1024 / 1024, 2)
-        speed = get_speed(mode)
+        delta = round(get_traffic() - log_traffic)
+        speed = get_speed()
         log(f"{mode_str}速率：{speed} MB/s  流量触发：{delta}/{value} MB", rewrite=True)
         if delta >= value:
             log()
@@ -121,7 +135,7 @@ def traffic_mode(esf: ESurfing, mode: str, value: float):
             time.sleep(2.5)  # 避免认证超时
             if not esf.login()[0]:
                 return log(f"登录失败")
-            log_traffic = get_traffic(mode)
+            log_traffic = get_traffic()
             log()
 
 
