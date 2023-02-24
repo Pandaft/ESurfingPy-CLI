@@ -151,7 +151,7 @@ Options:
   -m, --mode [uls|dls|ult|dlt|itv|mul]
                                   触发模式
   -v, --value TEXT                触发网速(MB/s)或流量(MB)或时间(s)
-  -s, --auto-stop BOOLEAN         自动停止
+  -s, --auto-stop BOOLEAN         自动停止(仅对网速模式有效)
   -u, --esurfing-url TEXT         校园网登录网址
   -c, --wlan-acip TEXT            认证服务器IP
   -r, --wlan-userip TEXT          登录设备IP
@@ -174,13 +174,13 @@ Options:
 
 示例：
 
-+ 实时监控上传速率，连续 10s 低于 3MB/s 时自动重登：
+- 实时监控上传速率，连续 10s 低于 3MB/s 时自动重登：
 
-`./ESurfingPy-CLI.exe auto -m uls -v 3 -s true -u 125.88.59.131:10001 -c 123.123.123.123 -r 234.234.234.234 -a 15012341234 -p 12345678 -v true`
+`./ESurfingPy-CLI.exe auto -m uls -v 3 -u 125.88.59.131:10001 -c 123.123.123.123 -r 234.234.234.234 -a 15012341234 -p 12345678 -v true`
 
-+ 实时监控下载流量，达到 600MB 时自动重登：（-as 在此无效，随意输入就行）
+- 实时监控下载流量，达到 600MB 时自动重登： 
 
-`./ESurfingPy-CLI.exe auto -m dlt -v 600 -s true -u 125.88.59.131:10001 -c 123.123.123.123 -r 234.234.234.234 -a 15012341234 -p 12345678 -v true`
+`./ESurfingPy-CLI.exe auto -m dlt -v 600 -u 125.88.59.131:10001 -c 123.123.123.123 -r 234.234.234.234 -a 15012341234 -p 12345678 -v true`
 
 <br />
 
