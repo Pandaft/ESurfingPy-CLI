@@ -51,7 +51,7 @@ def logout(esurfing_url, wlan_acip, wlan_userip, account, password, signature, v
 
 @cli.command()
 @click.option('-m', '--mode', prompt='触发模式', help='触发模式', type=click.Choice(["uls", "dls", "ult", "dlt", "itv", "mul"], case_sensitive=False))
-@click.option('-v', '--value', prompt='触发阈值', type=float, help='触发网速(MB/s)或流量(MB)或时间(s)')
+@click.option('-t', '--threshold', prompt='触发阈值', type=float, help='触发网速(MB/s)或流量(MB)或时间(s)')
 @click.option('-s', '--auto-stop', prompt='自动停止', default=True, type=bool, help='自动停止(仅对网速模式有效)')
 @click.option('-u', '--esurfing-url', default=DEFAULT_ESURFING_URL, help='校园网登录网址')
 @click.option('-c', '--wlan-acip', help='认证服务器IP')
@@ -59,7 +59,7 @@ def logout(esurfing_url, wlan_acip, wlan_userip, account, password, signature, v
 @click.option('-a', '--account', prompt='账号', help='账号')
 @click.option('-p', '--password', prompt='密码', help='密码')
 @click.option('-v', '--verbose', type=bool, default=True, help='输出详细过程')
-def auto(mode, value, auto_stop, esurfing_url, wlan_acip, wlan_userip, account, password, verbose):
+def auto(mode, threshold, auto_stop, esurfing_url, wlan_acip, wlan_userip, account, password, verbose):
     """多种模式触发重登校园网"""
     # mode:
     #     uls, upload_speed     - 上行速率低于指定值时自动重登校园网
@@ -68,7 +68,7 @@ def auto(mode, value, auto_stop, esurfing_url, wlan_acip, wlan_userip, account, 
     #     dlt, download_traffic - 下载流量达到指定值时自动重登校园网
     #     itv, interval         - 间隔指定的时间自动重登校园网
     #     mul, manual           - 手动按回车后自动重登校园网
-    # value: 指定值
+    # threshold: 触发阈值
     esf = esurfing.ESurfing(
         account=account,
         password=password,
@@ -77,7 +77,7 @@ def auto(mode, value, auto_stop, esurfing_url, wlan_acip, wlan_userip, account, 
         wlanuserip=wlan_userip,
         verbose=verbose
     )
-    return relogin(esf, mode, value, auto_stop)
+    return relogin(esf, mode, threshold, auto_stop)
 
 
 @cli.command()
