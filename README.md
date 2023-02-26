@@ -59,7 +59,7 @@ python main.py
 
 ## 命令行（CLI）
 
-```text
+```shell
 > ./ESurfingPy-CLI.exe --help
 Usage: ESurfingPy-CLI.exe [OPTIONS] COMMAND [ARGS]...
 
@@ -78,7 +78,7 @@ Commands:
 
 ### 登录
 
-```text
+```shell
 > ./ESurfingPy-CLI.exe login --help
 Usage: ESurfingPy-CLI.exe login [OPTIONS]
 
@@ -100,7 +100,7 @@ Options:
 
 ### 登出
 
-```text
+```shell
 > ./ESurfingPy-CLI.exe logout --help
 Usage: ESurfingPy-CLI.exe logout [OPTIONS]
 
@@ -126,7 +126,7 @@ Options:
 
 ### 识别验证码
 
-```text
+```shell
 > ESurfingPy-CLI.exe ocr --help
 Usage: ESurfingPy-CLI.exe ocr [OPTIONS]
 
@@ -141,7 +141,7 @@ Options:
 
 ### 多种模式自动重登
 
-```text
+```shell
 > ./ESurfingPy-CLI.exe auto --help
 Usage: ESurfingPy-CLI.exe auto [OPTIONS]
 
@@ -150,7 +150,7 @@ Usage: ESurfingPy-CLI.exe auto [OPTIONS]
 Options:
   -m, --mode [uls|dls|ult|dlt|itv|mul]
                                   触发模式
-  -v, --value TEXT                触发网速(MB/s)或流量(MB)或时间(s)
+  -t, --threshold TEXT            触发网速(MB/s)或流量(MB)或时间(s)
   -s, --auto-stop BOOLEAN         自动停止(仅对网速模式有效)
   -u, --esurfing-url TEXT         校园网登录网址
   -c, --wlan-acip TEXT            认证服务器IP
@@ -176,11 +176,11 @@ Options:
 
 - 实时监控上传速率，连续 10s 低于 3MB/s 时自动重登：
 
-`./ESurfingPy-CLI.exe auto -m uls -v 3 -u 125.88.59.131:10001 -c 123.123.123.123 -r 234.234.234.234 -a 15012341234 -p 12345678 -v true`
+`./ESurfingPy-CLI.exe auto -m uls -t 3 -u 125.88.59.131:10001 -c 123.123.123.123 -r 234.234.234.234 -a 15012341234 -p 12345678 -v true`
 
 - 实时监控下载流量，达到 600MB 时自动重登： 
 
-`./ESurfingPy-CLI.exe auto -m dlt -v 600 -u 125.88.59.131:10001 -c 123.123.123.123 -r 234.234.234.234 -a 15012341234 -p 12345678 -v true`
+`./ESurfingPy-CLI.exe auto -m dlt -t 600 -u 125.88.59.131:10001 -c 123.123.123.123 -r 234.234.234.234 -a 15012341234 -p 12345678 -v true`
 
 <br />
 
