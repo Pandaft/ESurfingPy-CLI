@@ -1,9 +1,7 @@
 import time
 import psutil
-from . import logs
 from .esurfing import ESurfing
-
-log = logs.log
+from .log import log
 
 
 class Net:
@@ -50,14 +48,14 @@ def speed_mode(esf: ESurfing, mode: str, value: float, auto_stop: bool):
         get_traffic = Net.Download.traffic
         get_speed = Net.Download.speed
     else:
-        return log("模式参数错误")
+        return log.error("模式参数错误")
 
     # 获取 signature 参数
     if not esf.signature:
-        log("尝试登录获取 signature ……")
+        log.warning("尝试登录获取 signature ……")
         success, message = esf.login()
         if not success:
-            return log(f"登录失败：{message}")
+            return log.error(f"登录失败：{message}")
 
     low_times = 0  # 低速次数
     seem_done = 0  # 低于 0.1 MB/s 时判定疑似传输完成的次数
@@ -66,10 +64,10 @@ def speed_mode(esf: ESurfing, mode: str, value: float, auto_stop: bool):
     while True:
         speed = get_speed()
         now_traffic = get_traffic() - log_traffic
-        log(f"本次流量：{now_traffic} MB\t"
-            f"{mode_str}速度：{speed} MB/s\t"
-            f"低速触发：{low_times}/10\t"
-            f"完成触发：{seem_done}/10", rewrite=True)
+        log.info(f"本次流量：{now_traffic} MB\t"
+                 f"{mode_str}速度：{speed} MB/s\t"
+                 f"低速触发：{low_times}/10\t"
+                 f"完成触发：{seem_done}/10")
 
         # 自动停止
         if auto_stop:
@@ -79,23 +77,21 @@ def speed_mode(esf: ESurfing, mode: str, value: float, auto_stop: bool):
                 # 速率低于 0.1 MB/s ，判定疑似传输完成
                 seem_done += 1
                 if seem_done == 11:
-                    return log(f"检测到连续 10s {mode_str}速率低于 0.1 MB/s，已自动停止")
+                    return log.warning(f"检测到连续 10s {mode_str}速率低于 0.1 MB/s，已自动停止")
 
         # 限速检测
         if speed < value:
             # 速率低于指定值，疑似被限速
             low_times += 1
             if low_times == 11:
-                log()
-                log(f"检测到连续 10s {mode_str}速率低于 {value} MB/s，疑似被限速，重新登录中……")
+                log.warning(f"检测到连续 10s {mode_str}速率低于 {value} MB/s，疑似被限速，重新登录中……")
                 if not esf.logout():
-                    return log("登出失败")
+                    return log.error("登出失败")
                 time.sleep(2.5)  # 避免认证超时
                 if not esf.login():
-                    return log("登录失败")
+                    return log.error("登录失败")
                 low_times, seem_done = 0, 0
                 log_traffic = get_traffic()
-                log()
         else:
             # 速率高于指定值
             low_times = 0
@@ -114,51 +110,49 @@ def traffic_mode(esf: ESurfing, mode: str, value: float):
         get_traffic = Net.Download.traffic
         get_speed = Net.Download.speed
     else:
-        return log("模式参数错误")
+        return log.error("模式参数错误")
 
     # 获取 signature 参数
     if not esf.signature:
-        log("首次登录尝试获取 signature ……")
+        log.warning("首次登录尝试获取 signature ……")
         if not esf.login():
-            return log(f"登录失败")
+            return log.error(f"登录失败")
 
     log_traffic = get_traffic()
     while True:
         delta = round(get_traffic() - log_traffic)
         speed = get_speed()
-        log(f"{mode_str}速率：{speed} MB/s  流量触发：{delta}/{value} MB", rewrite=True)
+        log.info(f"{mode_str}速率：{speed} MB/s  "
+                 f"流量触发：{delta}/{value} MB")
         if delta >= value:
-            log()
-            log("重新登录中")
+            log.warning("重新登录中")
             if not esf.logout():
-                return log("登出失败")
+                return log.error("登出失败")
             time.sleep(2.5)  # 避免认证超时
             if not esf.login()[0]:
-                return log(f"登录失败")
+                return log.error(f"登录失败")
             log_traffic = get_traffic()
-            log()
 
 
 def interval_mode(esf: ESurfing, value):
     """间隔指定的时间自动重登校园网"""
 
-    log("首次登录尝试获取 signature ……")
+    log.warning("首次登录尝试获取 signature ……")
     first_login = esf.login()
     if not first_login[0]:
-        return log(f"登录失败：{first_login}")
+        return log.error(f"登录失败：{first_login}")
 
     time_cal = 0
     while True:
-        log(f"即将于 {value - time_cal}s 后重新登录", rewrite=True)
+        log.info(f"即将于 {value - time_cal}s 后重新登录")
         time.sleep(1)
         if value - time_cal == 0:
-            log()
-            log("正在重新登录")
+            log.warning("正在重新登录")
             if not esf.logout()[0]:
-                return log("登录失败")
+                return log.error("登录失败")
             time.sleep(2.5)  # 避免认证超时
             if not esf.login()[0]:
-                return log("登出失败")
+                return log.error("登出失败")
             time_cal = 0
         else:
             time_cal += 1
@@ -167,15 +161,15 @@ def interval_mode(esf: ESurfing, value):
 def manual_mode(esf: ESurfing):
     """手动按回车后自动重登校园网"""
 
-    log("首次登录尝试获取 signature ……")
+    log.warning("首次登录尝试获取 signature ……")
     if not esf.login():
-        return log("登录失败")
+        return log.error("登录失败")
 
     while True:
         input(f"[{time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())}] 按回车键以重新登录校园网")
         esf.logout()
         if not esf.login():
-            return log(f"登录失败")
+            return log.error(f"登录失败")
 
 
 def relogin(esf: ESurfing, mode: str, value: float, auto_stop: bool):
@@ -205,4 +199,4 @@ def relogin(esf: ESurfing, mode: str, value: float, auto_stop: bool):
         return manual_mode(esf)
 
     # 模式错误
-    return log("模式参数错误")
+    return log.error("模式参数错误")
