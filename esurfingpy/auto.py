@@ -63,7 +63,7 @@ def speed_mode(esf: ESurfing, mode: str, value: float, auto_stop: bool):
 
     while True:
         speed = get_speed()
-        now_traffic = get_traffic() - log_traffic
+        now_traffic = round(get_traffic() - log_traffic, 2)
         log.info(f"本次流量：{now_traffic} MB\t"
                  f"{mode_str}速度：{speed} MB/s\t"
                  f"低速触发：{low_times}/10\t"
