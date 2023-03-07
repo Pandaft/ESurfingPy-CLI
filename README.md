@@ -204,6 +204,14 @@ Options:
 
 <br />
 
+## 免责声明
+
+此项目仅供研究、学习和交流，请勿用于商业或非法用途，开发者与协作者不对使用者负任何法律责任，使用者自行承担因不当使用所产生的后果与责任。
+
+This project is only for research, learning and exchange. Do not use it for commercial or illegal purposes. Developers and collaborators do not assume any legal responsibility for users. Users bear the consequences and responsibilities arising from improper use.
+
+<br />
+
 ## 其他
 
 如果此项目对你有帮助，求点个 ★ ！
