@@ -61,7 +61,7 @@ def get_parameters(verbose: bool = False):
     本机未登录校园网时才可通过此方法获取上述参数
     """
     try:
-        response = requests.get(url="http://189.cn/")
+        response = requests.get(url="http://189.cn/", timeout=2)
         esurfingurl = re.search("http://(.+?)/", response.url).group(1)
         wlanacip = re.search("wlanacip=(.+?)&", response.url).group(1)
         wlanuserip = re.search("wlanuserip=(.+)", response.url).group(1)
