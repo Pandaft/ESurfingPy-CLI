@@ -72,8 +72,8 @@ Commands:
   auto     多种模式触发重登校园网
   login    登录校园网
   logout   登出校园网
-  ocr      识别验证码
-  version  输出版本
+  ocr      识别图片
+  version  输出当前版本
 ```
 
 ### 登录
@@ -85,12 +85,12 @@ Usage: ESurfingPy-CLI.exe login [OPTIONS]
   登录校园网
 
 Options:
-  -u, --esurfing-url TEXT  校园网登录网址
+  -u, --esurfing-url TEXT  校园网登录网址  [default: enet.10000.gd.cn:10001]
   -c, --wlan-acip TEXT     认证服务器IP
   -r, --wlan-userip TEXT   登录设备IP
   -a, --account TEXT       账号
   -p, --password TEXT      密码
-  -v, --verbose BOOLEAN    输出详细过程
+  -v, --verbose BOOLEAN    输出详细过程  [default: True]
   --help                   Show this message and exit.
 ```
 
@@ -113,7 +113,7 @@ Options:
   -a, --account TEXT       账号
   -p, --password TEXT      密码
   -s, --signature TEXT     签名
-  -v, --verbose BOOLEAN    输出详细过程
+  -v, --verbose BOOLEAN    输出详细过程  [default: True]
   --help                   Show this message and exit.
 ```
 
@@ -130,7 +130,7 @@ Options:
 > ESurfingPy-CLI.exe ocr --help
 Usage: ESurfingPy-CLI.exe ocr [OPTIONS]
 
-  识别验证码
+  识别图片
 
 Options:
   -i, --image TEXT  图片路径
@@ -150,14 +150,14 @@ Usage: ESurfingPy-CLI.exe auto [OPTIONS]
 Options:
   -m, --mode [uls|dls|ult|dlt|itv|mul]
                                   触发模式
-  -t, --threshold TEXT            触发网速(MB/s)或流量(MB)或时间(s)
-  -s, --auto-stop BOOLEAN         自动停止(仅对网速模式有效)
-  -u, --esurfing-url TEXT         校园网登录网址
+  -t, --threshold FLOAT           触发网速(MB/s)或流量(MB)或时间(s)
+  -s, --auto-stop BOOLEAN         自动停止(仅对网速模式有效)  [default: True]
+  -u, --esurfing-url TEXT         校园网登录网址  [default: enet.10000.gd.cn:10001]
   -c, --wlan-acip TEXT            认证服务器IP
   -r, --wlan-userip TEXT          登录设备IP
   -a, --account TEXT              账号
   -p, --password TEXT             密码
-  -v, --verbose BOOLEAN           输出详细过程
+  -v, --verbose BOOLEAN           输出详细过程  [default: True]
   --help                          Show this message and exit.
 ```
 
