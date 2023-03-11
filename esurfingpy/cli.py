@@ -1,11 +1,13 @@
 import os
 import time
+
 import click
+
 from . import esurfing
+from .__version__ import __version__, __date__
 from .auto import relogin
 from .ocr import ocr_image
 
-VERSION = "0.3.3"
 DEFAULT_ESURFING_URL = "enet.10000.gd.cn:10001"
 
 
@@ -113,4 +115,4 @@ def ocr(image: str) -> None | str:
 @cli.command()
 def version():
     """输出当前版本"""
-    click.echo(VERSION)
+    click.echo(f"{__version__} ({__date__})")

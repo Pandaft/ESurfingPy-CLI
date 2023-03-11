@@ -1,5 +1,7 @@
 import time
+
 import psutil
+
 from .esurfing import ESurfing
 from .log import log
 

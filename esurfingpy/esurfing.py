@@ -2,8 +2,10 @@ import binascii
 import json
 import re
 import time
+
 import requests
 import rsa
+
 from . import ocr
 from .log import log
 
@@ -126,6 +128,7 @@ def login(account: str, password: str,
                 log.info('正在获取验证码网址...')
             vcode_path = re.search('/common/image_code\.jsp\?time=\d+', str(resp.content)).group()
             vcode_url = f'http://{esurfingurl}{vcode_path}'
+            log.info('获取验证码网址成功')
         except Exception as exc:
             return False, log.error(f"获取验证码网址失败：{exc}")
 
