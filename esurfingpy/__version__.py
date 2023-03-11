@@ -1,3 +1,3 @@
-__version__ = "0.3.3"
-__date__ = "2023/03/06"
+__version__ = "0.4.0"
+__date__ = "2023/03/11"
 __url__ = "https://github.com/Pandaft/ESurfingPy-CLI/"
