@@ -76,11 +76,12 @@ def get_parameters(verbose: bool = False):
 
 def login(account: str, password: str,
           esurfingurl: str = DEFAULT_ESURFING_URL, wlanacip: str = "", wlanuserip: str = "",
-          verbose: bool = True):
+          retry: int = 10, verbose: bool = True):
     """
     登录校园网
     account, password 必填参数；
     esurfingurl, wlanacip, wlanuserip 选填参数，本机登录且未登录时可自动获取；
+    retry: 选填参数，最大重试次数；
     verbose: 选填参数，输出过程。
     """
 
@@ -128,7 +129,8 @@ def login(account: str, password: str,
                 log.info('正在获取验证码网址...')
             vcode_path = re.search('/common/image_code\.jsp\?time=\d+', str(resp.content)).group()
             vcode_url = f'http://{esurfingurl}{vcode_path}'
-            log.info('获取验证码网址成功')
+            if verbose:
+                log.info('获取验证码网址成功')
         except Exception as exc:
             return False, log.error(f"获取验证码网址失败：{exc}")
 
@@ -208,43 +210,47 @@ def login(account: str, password: str,
             return False, log.error(f'发送登录请求失败：{exc}')
 
         # 判断登录结果
+        log_data['times'] += 1
         result_code = json.loads(resp.text)['resultCode']
         result_info = json.loads(resp.text)['resultInfo']
 
-        # 登录成功
-        if result_code == '0':
+        # 登录成功 / 重复登录
+        if result_code in ['0', '13002000']:
             time_taken = round(time.time() - log_data['time'], 2)
-            log.info(f'登录成功，总耗时 {time_taken}s，失败 {log_data["times"]} 次')
+            if result_code == '0':
+                log.info(f'登录成功，总耗时 {time_taken}s，失败 {log_data["times"]} 次')
+            elif result_code == '13002000':
+                log.warning(f'重复登录，总耗时 {time_taken}s，失败 {log_data["times"]} 次')
             if verbose:
                 log.info(f'signature: {resp.cookies["signature"]}')
             return True, resp.cookies['signature']
 
-        # 重复登录
-        elif result_code == '13002000':
-            time_taken = round(time.time() - log_data['time'], 2)
-            log.warning(f'重复登录，总耗时 {time_taken}s，失败 {log_data["times"]} 次')
-            if verbose:
-                log.info(f'signature: {resp.cookies["signature"]}')
-            return True, resp.cookies['signature']
+        # 密码错误
+        elif result_code == '13012000':
+            log.error(result_info)
 
         # 验证码错误
         elif result_code == '11063000':
             log.error(result_info)
-            log_data['times'] += 1
-            continue
 
         # 请求认证超时
         elif result_code == '13005000':
             log.error(result_info)
-            log_data['times'] += 1
-            continue
 
         # 禁止网页认证
         elif result_code == '13018000':
             return False, log.error(result_info)
 
+        # 没有定购此产品
+        elif result_code == "13016000":
+            return False, log.error(result_info)
+
         # 其他情况
         else:
+            # 达到重试次数
+            if log_data["times"] < retry:
+                log.warning(f"登录失败，返回码：{result_code}  信息：{result_info}")
+                continue
             return False, log.error(f"登录失败，返回码：{result_code}  信息：{result_info}")
 
 
