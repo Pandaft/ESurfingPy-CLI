@@ -14,7 +14,7 @@ class Gui:
         self.toplevel.resizable(False, False)
         self.toplevel.title("GUI for ESurfingPy-CLI")
         self.frame2 = ttk.Frame(self.toplevel)
-        self.frame2.configure(padding=15)
+        self.frame2.configure(padding=10)
         self.frame1 = ttk.Frame(self.frame2)
         self.frame1.configure(height=200)
         self.label_u = ttk.Label(self.frame1)
@@ -52,7 +52,7 @@ class Gui:
         # self.checkbutton_save = tk.Checkbutton(self.frame1)  # To be develop
         # self.checkbutton_save.configure(text='保存信息')
         # self.checkbutton_save.grid(column=1, row=5)
-        self.frame1.pack(pady=10, side="top")
+        self.frame1.pack(ipady=5, side="top")
         self.frame3 = ttk.Frame(self.frame2)
         self.button_login = ttk.Button(self.frame3)
         self.button_login.configure(text='登录')
