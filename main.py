@@ -1,4 +1,5 @@
 import sys
+
 import esurfingpy
 
 if __name__ == '__main__':

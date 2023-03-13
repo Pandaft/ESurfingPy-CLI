@@ -1,6 +1,7 @@
-import platform
-import ddddocr
 import os
+import platform
+
+import ddddocr
 
 separator = ";"
 if platform.system() != "Windows":
