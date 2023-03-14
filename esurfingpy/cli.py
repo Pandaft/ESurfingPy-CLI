@@ -84,7 +84,7 @@ def auto(mode, threshold, auto_stop, esurfing_url, wlan_acip, wlan_userip, accou
 
 @cli.command()
 @click.option('-i', '--image', prompt='图片路径', help='图片路径')
-def ocr(image: str) -> None | str:
+def ocr(image: str) -> None or str:
     """识别图片"""
     # 文件不存在
     if not os.path.isfile(image):
