@@ -1,0 +1,10 @@
+# IDE
+.idea
+
+# PyInstaller
+build
+dist
+*.spec
+
+# Data
+*.json
