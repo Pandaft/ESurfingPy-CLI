@@ -6,6 +6,7 @@ import click
 from . import esurfing
 from .__version__ import __version__, __date__
 from .auto import relogin
+from .gui import Gui
 from .ocr import ocr_image
 
 DEFAULT_ESURFING_URL = "enet.10000.gd.cn:10001"
@@ -17,14 +18,20 @@ def cli():
     pass
 
 
-@cli.command()
+@cli.command(name="gui")
+def cli_gui():
+    """启动图形界面"""
+    Gui().run()
+
+
+@cli.command(name="login")
 @click.option('-u', '--esurfing-url', default=DEFAULT_ESURFING_URL, show_default=True, help='校园网登录网址')
 @click.option('-c', '--wlan-acip', help='认证服务器IP')
 @click.option('-r', '--wlan-userip', help='登录设备IP')
 @click.option('-a', '--account', prompt='账号', help='账号')
 @click.option('-p', '--password', prompt='密码', help='密码')
 @click.option('-v', '--verbose', type=bool, default=True, show_default=True, help='输出详细过程')
-def login(esurfing_url, wlan_acip, wlan_userip, account, password, verbose):
+def cli_login(esurfing_url, wlan_acip, wlan_userip, account, password, verbose):
     """登录校园网"""
     # account, password 必填参数；
     # esurfing_url, wlan_acip, wlan_userip 选填参数，本机登录且未登录时可自动获取；
@@ -33,7 +40,7 @@ def login(esurfing_url, wlan_acip, wlan_userip, account, password, verbose):
                           account=account, password=password, verbose=verbose)
 
 
-@cli.command()
+@cli.command(name="logout")
 @click.option('-u', '--esurfing-url', default=DEFAULT_ESURFING_URL, help='校园网登录网址')
 @click.option('-c', '--wlan-acip', prompt='认证服务器IP', help='认证服务器IP')
 @click.option('-r', '--wlan-userip', prompt='登录设备IP', help='登录设备IP')
@@ -41,7 +48,7 @@ def login(esurfing_url, wlan_acip, wlan_userip, account, password, verbose):
 @click.option('-p', '--password', prompt='密码', help='密码')
 @click.option('-s', '--signature', help='签名')
 @click.option('-v', '--verbose', type=bool, default=True, show_default=True, help='输出详细过程')
-def logout(esurfing_url, wlan_acip, wlan_userip, account, password, signature, verbose):
+def cli_logout(esurfing_url, wlan_acip, wlan_userip, account, password, signature, verbose):
     """登出校园网"""
     # account 必填参数；
     # esurfing_url, wlan_acip, wlan_userip 必填参数；
@@ -51,7 +58,7 @@ def logout(esurfing_url, wlan_acip, wlan_userip, account, password, signature, v
                            account=account, password=password, signature=signature, verbose=verbose)
 
 
-@cli.command()
+@cli.command(name="auto")
 @click.option('-m', '--mode', prompt='触发模式', help='触发模式', type=click.Choice(["uls", "dls", "ult", "dlt", "itv", "mul"], case_sensitive=False))
 @click.option('-t', '--threshold', prompt='触发阈值', type=float, help='触发网速(MB/s)或流量(MB)或时间(s)')
 @click.option('-s', '--auto-stop', prompt='自动停止', default=True, show_default=True, type=bool, help='自动停止(仅对网速模式有效)')
@@ -61,7 +68,7 @@ def logout(esurfing_url, wlan_acip, wlan_userip, account, password, signature, v
 @click.option('-a', '--account', prompt='账号', help='账号')
 @click.option('-p', '--password', prompt='密码', help='密码')
 @click.option('-v', '--verbose', type=bool, default=True, show_default=True, help='输出详细过程')
-def auto(mode, threshold, auto_stop, esurfing_url, wlan_acip, wlan_userip, account, password, verbose):
+def cli_auto(mode, threshold, auto_stop, esurfing_url, wlan_acip, wlan_userip, account, password, verbose):
     """多种模式触发重登校园网"""
     # mode:
     #     uls, upload_speed     - 上行速率低于指定值时自动重登校园网
@@ -82,9 +89,9 @@ def auto(mode, threshold, auto_stop, esurfing_url, wlan_acip, wlan_userip, accou
     return relogin(esf, mode, threshold, auto_stop)
 
 
-@cli.command()
+@cli.command(name="ocr")
 @click.option('-i', '--image', prompt='图片路径', help='图片路径')
-def ocr(image: str) -> None or str:
+def cli_ocr(image: str) -> None or str:
     """识别图片"""
     # 文件不存在
     if not os.path.isfile(image):
@@ -112,7 +119,7 @@ def ocr(image: str) -> None or str:
     return result
 
 
-@cli.command()
-def version():
+@cli.command(name="version")
+def cli_version():
     """输出当前版本"""
     click.echo(f"{__version__} ({__date__})")
