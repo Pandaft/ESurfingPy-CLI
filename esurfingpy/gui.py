@@ -118,16 +118,22 @@ class Gui:
         except Exception as exc:
             msgbox.showwarning(
                 title="警告",
-                message=f"保存信息失败，原因：\n{exc}"
+                message=f"保存信息失败，原因："
+                        f"\n{exc}"
             )
         return False
 
-    def get_params(self):
+    def get_params(self) -> bool:
         """获取参数"""
         success, esurfingurl, wlanacip, wlanuserip = esurfing.get_parameters()
         if not success:
-            msgbox.showerror("错误", "获取本机参数失败")
-            return
+            msgbox.showerror(
+                title="错误",
+                message="获取本机参数失败，可能的原因："
+                        "\n1. 未连接校园网"
+                        "\n2. 当前已登录校园网"
+            )
+            return False
         for entry, value in [
             (self.entry_u, esurfingurl),
             (self.entry_c, wlanacip),
@@ -135,6 +141,7 @@ class Gui:
         ]:
             entry.delete(0, ttk.END)
             entry.insert(0, value)
+        return True
 
     def login(self):
         """登录"""
