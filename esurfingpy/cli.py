@@ -19,9 +19,10 @@ def cli():
 
 
 @cli.command(name="gui")
-def cli_gui():
+@click.option('-h', '--hide-console', type=bool, default=True, show_default=True, help='隐藏控制台（仅适用于 Windows）')
+def cli_gui(hide_console):
     """启动图形界面"""
-    Gui().run()
+    Gui(hide_console=hide_console).run()
 
 
 @cli.command(name="login")

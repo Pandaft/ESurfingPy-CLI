@@ -92,7 +92,8 @@ Usage: ESurfingPy-CLI.exe gui [OPTIONS]
   启动图形界面
 
 Options:
-  --help  Show this message and exit.
+  -h, --hide-console BOOLEAN  隐藏控制台（仅适用于 Windows）  [default: True]
+  --help                      Show this message and exit.
 ```
 
 不带命令和参数直接运行则默认启动图形界面，也可通过加 `gui` 命令来启动。

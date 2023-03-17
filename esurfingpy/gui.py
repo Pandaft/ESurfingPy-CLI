@@ -1,5 +1,6 @@
-import os
 import json
+import os
+import platform
 import webbrowser
 from tkinter import messagebox as msgbox
 
@@ -12,7 +13,7 @@ DEFAULT_DATA_FILE = "./ESurfingPy-cli.json"
 
 
 class Gui:
-    def __init__(self):
+    def __init__(self, hide_console: bool = False):
         """init"""
         data = self.read_data()
 
@@ -73,9 +74,20 @@ class Gui:
         # self.button_logout.configure(state="disabled", text='登出')
         # self.button_logout.grid(column=1, padx=10, row=0)
         # self.button_logout.configure(command=self.logout)
+
+        # show and hide console (Windows only)
+        self.console_visible = True
+        if hide_console and platform.system() == "Windows":
+            import ctypes
+            self.button_toggle_console = ttk.Button(self.frame3)
+            self.button_toggle_console.configure(text='显示控制台')
+            self.button_toggle_console.grid(column=2, padx=10, row=0)
+            self.button_toggle_console.configure(command=self.toggle_console)
+            ctypes.windll.user32.ShowWindow(ctypes.windll.kernel32.GetConsoleWindow(), 0)
+            self.console_visible = False
         self.button4 = ttk.Button(self.frame3)
         self.button4.configure(text='关于')
-        self.button4.grid(column=2, padx=10, row=0)
+        self.button4.grid(column=3, padx=10, row=0)
         self.button4.configure(command=self.about)
         self.frame3.pack(side="top")
         self.frame2.pack(side="top")
@@ -162,6 +174,14 @@ class Gui:
 
     # def logout(self):
     #     pass
+
+    def toggle_console(self):
+        """切换显示或隐藏控制台（仅适用于 Windows）"""
+        if platform.system() == "Windows":
+            import ctypes
+            ctypes.windll.user32.ShowWindow(ctypes.windll.kernel32.GetConsoleWindow(), not self.console_visible)
+            self.button_toggle_console.configure(text=("显示" if self.console_visible else "隐藏") + "控制台")
+            self.console_visible = not self.console_visible
 
     @staticmethod
     def about():
