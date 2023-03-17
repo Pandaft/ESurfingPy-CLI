@@ -8,9 +8,15 @@
 
 <br />
 
-## 动图演示
+## 项目演示
 
-![4DjH8U.gif](https://z3.ax1x.com/2021/09/24/4DjH8U.gif)
+### 图形界面
+
+![gui.gif](./docs/images/gui.gif)
+
+### 命令行
+
+![cli.gif](./docs/images/cli.gif)
 
 <br />
 
@@ -57,7 +63,7 @@ python main.py
 
 <br />
 
-## 命令行（CLI）
+## 命令行
 
 ```shell
 > ./ESurfingPy-CLI.exe --help
@@ -70,11 +76,26 @@ Options:
 
 Commands:
   auto     多种模式触发重登校园网
+  gui      启动图形界面
   login    登录校园网
   logout   登出校园网
   ocr      识别图片
   version  输出当前版本
 ```
+
+### 启动图形界面
+
+```shell
+> ./ESurfingPy-CLI.exe gui --help
+Usage: ESurfingPy-CLI.exe gui [OPTIONS]
+
+  启动图形界面
+
+Options:
+  --help  Show this message and exit.
+```
+
+不带命令和参数直接运行则默认启动图形界面，也可通过加 `gui` 命令来启动。
 
 ### 登录
 
