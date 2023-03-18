@@ -77,14 +77,15 @@ class Gui:
 
         # show and hide console (Windows only)
         self.console_visible = True
-        if hide_console and platform.system() == "Windows":
+        if platform.system() == "Windows":
             import ctypes
             self.button_toggle_console = ttk.Button(self.frame3)
-            self.button_toggle_console.configure(text='显示控制台')
+            self.button_toggle_console.configure(text="隐藏控制台")
             self.button_toggle_console.grid(column=2, padx=10, row=0)
             self.button_toggle_console.configure(command=self.toggle_console)
-            ctypes.windll.user32.ShowWindow(ctypes.windll.kernel32.GetConsoleWindow(), 0)
-            self.console_visible = False
+            if hide_console:
+                self.toggle_console()
+
         self.button4 = ttk.Button(self.frame3)
         self.button4.configure(text='关于')
         self.button4.grid(column=3, padx=10, row=0)
@@ -179,9 +180,9 @@ class Gui:
         """切换显示或隐藏控制台（仅适用于 Windows）"""
         if platform.system() == "Windows":
             import ctypes
-            ctypes.windll.user32.ShowWindow(ctypes.windll.kernel32.GetConsoleWindow(), not self.console_visible)
-            self.button_toggle_console.configure(text=("显示" if self.console_visible else "隐藏") + "控制台")
             self.console_visible = not self.console_visible
+            ctypes.windll.user32.ShowWindow(ctypes.windll.kernel32.GetConsoleWindow(), self.console_visible)
+            self.button_toggle_console.configure(text=("隐藏" if self.console_visible else "显示") + "控制台")
 
     @staticmethod
     def about():
