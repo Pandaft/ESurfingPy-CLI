@@ -9,13 +9,13 @@ import ttkbootstrap as ttk
 from . import esurfing
 from .__version__ import __version__, __url__, __date__
 
-DEFAULT_DATA_FILE = "./ESurfingPy-cli.json"
+DEFAULT_CONF_FILE = "./ESurfingPy-CLI.json"
 
 
 class Gui:
     def __init__(self, hide_console: bool = False):
         """init"""
-        data = self.read_data()
+        data = self.read_conf()
 
         self.toplevel = ttk.Window(themename="lumen")
         self.toplevel.configure(width=200)
@@ -98,20 +98,20 @@ class Gui:
         self.window.mainloop()
 
     @staticmethod
-    def read_data() -> dict:
-        """读取数据"""
-        if os.path.isfile(DEFAULT_DATA_FILE):
+    def read_conf() -> dict:
+        """读取配置"""
+        if os.path.isfile(DEFAULT_CONF_FILE):
             try:
-                with open(DEFAULT_DATA_FILE, encoding="utf-8") as f:
+                with open(DEFAULT_CONF_FILE, encoding="utf-8") as f:
                     return json.loads(f.read())
             except json.JSONDecodeError:
                 pass
         return {}
 
-    def save_data(self) -> bool:
-        """保存数据"""
+    def save_conf(self) -> bool:
+        """保存配置"""
         try:
-            with open(DEFAULT_DATA_FILE, "w", encoding="utf-8") as f:
+            with open(DEFAULT_CONF_FILE, "w", encoding="utf-8") as f:
                 f.write(json.dumps({
                     "esurfingurl": self.entry_u.get(),
                     "wlanacip": self.entry_c.get(),
@@ -159,7 +159,7 @@ class Gui:
     def login(self):
         """登录"""
         if self.checkbutton_save.state() == ("selected",):
-            self.save_data()
+            self.save_conf()
         success, msg_or_signature = esurfing.login(
             account=self.entry_a.get(),
             password=self.entry_p.get(),
