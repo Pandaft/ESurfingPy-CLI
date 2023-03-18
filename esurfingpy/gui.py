@@ -20,7 +20,7 @@ class Gui:
         self.toplevel = ttk.Window(themename="lumen")
         self.toplevel.configure(width=200)
         self.toplevel.resizable(False, False)
-        self.toplevel.title("GUI for ESurfingPy-CLI")
+        self.toplevel.title(f"ESurfingPy-CLI v{__version__}")
         self.frame2 = ttk.Frame(self.toplevel)
         self.frame2.configure(padding=10)
         self.frame1 = ttk.Frame(self.frame2)
