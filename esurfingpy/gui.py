@@ -4,7 +4,6 @@ import platform
 import webbrowser
 from tkinter import messagebox as msgbox
 
-import tkinter as tk
 import ttkbootstrap as ttk
 
 from . import esurfing
@@ -69,10 +68,10 @@ class Gui:
         self.entry_p.insert("0", data.get("password", ""))
         self.entry_p.grid(column=1, padx=5, pady=2, row=4)
 
-        self.checkbutton_save = tk.Checkbutton(self.frame2)
+        self.var_save = ttk.BooleanVar(value=True)
+        self.checkbutton_save = ttk.Checkbutton(self.frame2, variable=self.var_save)
         self.checkbutton_save.configure(text='保存信息')
-        # self.checkbutton_save.state(('selected', ))  # IDK why it doesn't work :(
-        self.checkbutton_save.grid(column=1, row=5, pady=5)
+        self.checkbutton_save.grid(column=1, row=5, pady=10)
 
         self.frame2.pack(side="top")
         self.frame3 = ttk.Frame(self.frame1)
@@ -90,7 +89,7 @@ class Gui:
         self.frame3.pack(side="top")
         self.separator = ttk.Separator(self.frame1)
         self.separator.configure(orient="horizontal")
-        self.separator.pack(expand="true", fill="both", pady=8)
+        self.separator.pack(expand=True, fill="both", pady=8)
         self.frame4 = ttk.Frame(self.frame1)
 
         # show and hide console (Windows only)
@@ -136,8 +135,7 @@ class Gui:
                     "wlanacip": self.entry_c.get(),
                     "wlanuserip": self.entry_r.get(),
                     "account": self.entry_a.get(),
-                    "password": self.entry_p.get(),
-                    # "save": self.checkbutton_save.state() == ('selected',)
+                    "password": self.entry_p.get()
                 }, indent=4))
                 return True
         except PermissionError:
@@ -177,7 +175,7 @@ class Gui:
 
     def login(self):
         """登录"""
-        if self.checkbutton_save.state() == ("selected",):
+        if self.var_save.get():
             self.save_conf()
         success, msg_or_signature = esurfing.login(
             account=self.entry_a.get(),
