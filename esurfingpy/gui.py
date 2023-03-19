@@ -4,6 +4,7 @@ import platform
 import webbrowser
 from tkinter import messagebox as msgbox
 
+import tkinter as tk
 import ttkbootstrap as ttk
 
 from . import esurfing
@@ -21,77 +22,95 @@ class Gui:
         self.toplevel.configure(width=200)
         self.toplevel.resizable(False, False)
         self.toplevel.title(f"ESurfingPy-CLI v{__version__}")
-        self.frame2 = ttk.Frame(self.toplevel)
-        self.frame2.configure(padding=10)
-        self.frame1 = ttk.Frame(self.frame2)
-        self.frame1.configure(height=200)
-        self.label_u = ttk.Label(self.frame1)
+
+        self.frame1 = ttk.Frame(self.toplevel)
+        self.frame1.configure(padding=10)
+        self.frame2 = ttk.Frame(self.frame1)
+        self.frame2.configure(height=200)
+
+        self.label_u = ttk.Label(self.frame2)
         self.label_u.configure(text='请求网址')
         self.label_u.grid(column=0, row=0, sticky="e")
-        self.entry_u = ttk.Entry(self.frame1)
+        self.entry_u = ttk.Entry(self.frame2)
         self.entry_u.insert("0", data.get("esurfingurl", "enet.10000.gd.cn:10001"))
         self.entry_u.grid(column=1, padx=5, pady=2, row=0)
-        self.button_get_params = ttk.Button(self.frame1)
+
+        self.button_get_params = ttk.Button(self.frame2)
         self.button_get_params.configure(text='\n尝试获取\n本机信息\n')
         self.button_get_params.grid(column=2, row=0, rowspan=3)
         self.button_get_params.configure(command=self.get_params)
-        self.label_c = ttk.Label(self.frame1)
+
+        self.label_c = ttk.Label(self.frame2)
         self.label_c.configure(text='认证服务器 IP')
         self.label_c.grid(column=0, row=1)
-        self.entry_c = ttk.Entry(self.frame1)
+        self.entry_c = ttk.Entry(self.frame2)
         self.entry_c.insert("0", data.get("wlanacip", ""))
         self.entry_c.grid(column=1, padx=5, pady=2, row=1)
-        self.label_r = ttk.Label(self.frame1)
+
+        self.label_r = ttk.Label(self.frame2)
         self.label_r.configure(text='登录设备 IP')
         self.label_r.grid(column=0, row=2, sticky="e")
-        self.entry_r = ttk.Entry(self.frame1)
+        self.entry_r = ttk.Entry(self.frame2)
         self.entry_r.insert("0", data.get("wlanuserip", ""))
         self.entry_r.grid(column=1, padx=5, pady=2, row=2)
-        self.label_a = ttk.Label(self.frame1)
+
+        self.label_a = ttk.Label(self.frame2)
         self.label_a.configure(text='账号')
         self.label_a.grid(column=0, row=3, sticky="e")
-        self.entry_a = ttk.Entry(self.frame1)
+        self.entry_a = ttk.Entry(self.frame2)
         self.entry_a.insert("0", data.get("account", ""))
         self.entry_a.grid(column=1, padx=5, pady=2, row=3)
-        self.label_p = ttk.Label(self.frame1)
+
+        self.label_p = ttk.Label(self.frame2)
         self.label_p.configure(text='密码')
         self.label_p.grid(column=0, row=4, sticky="e")
-        self.entry_p = ttk.Entry(self.frame1)
+        self.entry_p = ttk.Entry(self.frame2)
         self.entry_p.configure(show="•")
         self.entry_p.insert("0", data.get("password", ""))
         self.entry_p.grid(column=1, padx=5, pady=2, row=4)
-        self.checkbutton_save = ttk.Checkbutton(self.frame1)
+
+        self.checkbutton_save = tk.Checkbutton(self.frame2)
         self.checkbutton_save.configure(text='保存信息')
         # self.checkbutton_save.state(('selected', ))  # IDK why it doesn't work :(
         self.checkbutton_save.grid(column=1, row=5, pady=5)
-        self.frame1.pack(ipady=5, side="top")
-        self.frame3 = ttk.Frame(self.frame2)
+
+        self.frame2.pack(side="top")
+        self.frame3 = ttk.Frame(self.frame1)
+
         self.button_login = ttk.Button(self.frame3)
         self.button_login.configure(text='登录')
-        self.button_login.grid(column=0, padx=10, row=0)
+        self.button_login.pack(padx=5, side="left")
         self.button_login.configure(command=self.login)
-        # self.button_logout = ttk.Button(self.frame3)  # To be develop
+
+        # self.button_logout = ttk.Button(self.frame3)
         # self.button_logout.configure(state="disabled", text='登出')
-        # self.button_logout.grid(column=1, padx=10, row=0)
+        # self.button_logout.pack(padx=5, side="left")
         # self.button_logout.configure(command=self.logout)
+
+        self.frame3.pack(side="top")
+        self.separator = ttk.Separator(self.frame1)
+        self.separator.configure(orient="horizontal")
+        self.separator.pack(expand="true", fill="both", pady=8)
+        self.frame4 = ttk.Frame(self.frame1)
 
         # show and hide console (Windows only)
         self.console_visible = True
         if platform.system() == "Windows":
             import ctypes
-            self.button_toggle_console = ttk.Button(self.frame3)
+            self.button_toggle_console = ttk.Button(self.frame4)
             self.button_toggle_console.configure(text="隐藏控制台")
-            self.button_toggle_console.grid(column=2, padx=10, row=0)
+            self.button_toggle_console.pack(padx=5, side="left")
             self.button_toggle_console.configure(command=self.toggle_console)
             if hide_console:
                 self.toggle_console()
 
-        self.button4 = ttk.Button(self.frame3)
-        self.button4.configure(text='关于')
-        self.button4.grid(column=3, padx=10, row=0)
-        self.button4.configure(command=self.about)
-        self.frame3.pack(side="top")
-        self.frame2.pack(side="top")
+        self.button_about = ttk.Button(self.frame4)
+        self.button_about.configure(text='关于')
+        self.button_about.pack(padx=5, side="left")
+        self.button_about.configure(command=self.about)
+        self.frame4.pack(side="top")
+        self.frame1.pack(side="top")
+
         self.window = self.toplevel
 
     def run(self):
