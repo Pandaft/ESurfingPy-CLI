@@ -76,7 +76,7 @@ def get_parameters(verbose: bool = False):
 
 def login(account: str, password: str,
           esurfingurl: str = DEFAULT_ESURFING_URL, wlanacip: str = "", wlanuserip: str = "",
-          retry: int = 10, verbose: bool = True):
+          retry: int = 5, verbose: bool = True):
     """
     登录校园网
     account, password 必填参数；
@@ -127,7 +127,7 @@ def login(account: str, password: str,
         try:
             if verbose:
                 log.info('正在获取验证码网址...')
-            vcode_path = re.search('/common/image_code\.jsp\?time=\d+', str(resp.content)).group()
+            vcode_path = re.search(r'/common/image_code\.jsp\?time=\d+', str(resp.content)).group()
             vcode_url = f'http://{esurfingurl}{vcode_path}'
             if verbose:
                 log.info('获取验证码网址成功')
@@ -225,17 +225,19 @@ def login(account: str, password: str,
                 log.info(f'signature: {resp.cookies["signature"]}')
             return True, resp.cookies['signature']
 
-        # 密码错误
-        elif result_code == '13012000':
-            log.error(result_info)
-
         # 验证码错误
         elif result_code == '11063000':
             log.error(result_info)
+            continue
 
         # 请求认证超时
         elif result_code == '13005000':
             log.error(result_info)
+            continue
+
+        # 密码错误
+        elif result_code == '13012000':
+            return False, log.error(result_info)
 
         # 禁止网页认证
         elif result_code == '13018000':
