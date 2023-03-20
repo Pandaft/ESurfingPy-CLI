@@ -15,7 +15,9 @@ DEFAULT_CONF_FILE = "./ESurfingPy-CLI.json"
 class Gui:
     def __init__(self, hide_console: bool = False):
         """init"""
+
         data = self.read_conf()
+        self.signature = data.get("signature")
 
         self.toplevel = ttk.Window(themename="lumen")
         self.toplevel.configure(width=200)
@@ -81,10 +83,10 @@ class Gui:
         self.button_login.pack(padx=5, side="left")
         self.button_login.configure(command=self.login)
 
-        # self.button_logout = ttk.Button(self.frame3)
-        # self.button_logout.configure(state="disabled", text='登出')
-        # self.button_logout.pack(padx=5, side="left")
-        # self.button_logout.configure(command=self.logout)
+        self.button_logout = ttk.Button(self.frame3)
+        self.button_logout.configure(text='登出')
+        self.button_logout.pack(padx=5, side="left")
+        self.button_logout.configure(command=self.logout)
 
         self.frame3.pack(side="top")
         self.separator = ttk.Separator(self.frame1)
@@ -135,7 +137,8 @@ class Gui:
                     "wlanacip": self.entry_c.get(),
                     "wlanuserip": self.entry_r.get(),
                     "account": self.entry_a.get(),
-                    "password": self.entry_p.get()
+                    "password": self.entry_p.get(),
+                    "signature": self.signature
                 }, indent=4))
                 return True
         except PermissionError:
@@ -185,13 +188,26 @@ class Gui:
             wlanuserip=self.entry_r.get(),
         )
         if success:
-            # self.button_login.configure(state=tk.DISABLED)
+            self.signature = msg_or_signature
+            self.button_logout.configure(state=ttk.NORMAL)
             msgbox.showinfo("提示", "登录成功")
         else:
             msgbox.showerror("提示", f"登录失败：{msg_or_signature}")
 
-    # def logout(self):
-    #     pass
+    def logout(self):
+        """登出"""
+        success, msg = esurfing.logout(
+            account=self.entry_a.get(),
+            password=self.entry_p.get(),
+            esurfingurl=self.entry_u.get(),
+            wlanacip=self.entry_c.get(),
+            wlanuserip=self.entry_r.get(),
+            signature=self.signature
+        )
+        if success:
+            msgbox.showinfo("提示", "登出成功")
+        else:
+            msgbox.showerror("提示", f"登出失败：{msg}")
 
     def toggle_console(self):
         """切换显示或隐藏控制台（仅适用于 Windows）"""
@@ -210,10 +226,10 @@ class Gui:
                     f"\n项目：{__url__}"
                     f"\n"
                     f"\nESurfingPy-CLI 为命令行工具，"
-                    f"\n此可视化界面目前仅开发了简单的登录功能，"
-                    f"\n完整功能请使用命令调用此程序。"
+                    f"\n此图形界面仅提供登录和登出功能，"
+                    f"\n完整功能需使用命令行调用此程序。"
                     f"\n"
-                    f"\n完整文档、反馈问题等请到 GitHub 项目链接，"
+                    f"\n完整文档、反馈问题等请到 GitHub，"
                     f"\n是否打开项目链接？"
         )
         if open_url:
