@@ -239,6 +239,10 @@ def login(account: str, password: str,
         elif result_code == '13012000':
             return False, log.error(result_info)
 
+        # 用户认证失败（也可能是因为密码错误）
+        elif result_code == '13004000':
+            return False, log.error(result_info)
+
         # 禁止网页认证
         elif result_code == '13018000':
             return False, log.error(result_info)
