@@ -184,6 +184,8 @@ def login(account: str, password: str,
                 "password": password,
                 "rand": ocr_result,
             }, separators=(',', ':'))
+            if len(data) > 117:
+                return False, log.error("账号或密码长度过长")
             encrypted_data = rsa.encrypt(data.encode(), public_key)
             login_key = binascii.b2a_hex(encrypted_data).decode()
             time_taken = round(time.time() - log_time, 2)
