@@ -183,7 +183,7 @@ def login(account: str, password: str,
                 "userName": account,
                 "password": password,
                 "rand": ocr_result,
-            })
+            }, separators=(',', ':'))
             encrypted_data = rsa.encrypt(data.encode(), public_key)
             login_key = binascii.b2a_hex(encrypted_data).decode()
             time_taken = round(time.time() - log_time, 2)
