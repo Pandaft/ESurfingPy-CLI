@@ -212,7 +212,6 @@ def login(account: str, password: str,
             return False, log.error(f'发送登录请求失败：{exc}')
 
         # 判断登录结果
-        log_data['times'] += 1
         result_code = json.loads(resp.text)['resultCode']
         result_info = json.loads(resp.text)['resultInfo']
 
@@ -227,39 +226,32 @@ def login(account: str, password: str,
                 log.info(f'signature: {resp.cookies["signature"]}')
             return True, resp.cookies['signature']
 
-        # 验证码错误
-        elif result_code == '11063000':
-            log.error(result_info)
+        log_data['times'] += 1
+
+        # 问题不大
+        if result_code in [
+            '11063000',  # 验证码错误
+            '13005000',  # 请求认证超时
+        ]:
+            log.warning(result_info)
             continue
 
-        # 请求认证超时
-        elif result_code == '13005000':
-            log.error(result_info)
+        # 问题很大
+        if result_code in [
+            '13012000',  # 密码错误
+            '13004000',  # 用户认证失败（也可能是因为密码错误）
+            '13018000',  # 禁止网页认证
+            '13016000',  # 没有定购此产品
+        ]:
+            return False, log.error(result_info)
+
+        # 未知情况
+        if log_data["times"] < retry:
+            log.warning(f"登录失败，返回码：{result_code}  信息：{result_info}")
             continue
 
-        # 密码错误
-        elif result_code == '13012000':
-            return False, log.error(result_info)
-
-        # 用户认证失败（也可能是因为密码错误）
-        elif result_code == '13004000':
-            return False, log.error(result_info)
-
-        # 禁止网页认证
-        elif result_code == '13018000':
-            return False, log.error(result_info)
-
-        # 没有定购此产品
-        elif result_code == "13016000":
-            return False, log.error(result_info)
-
-        # 其他情况
-        else:
-            # 达到重试次数
-            if log_data["times"] < retry:
-                log.warning(f"登录失败，返回码：{result_code}  信息：{result_info}")
-                continue
-            return False, log.error(f"登录失败，返回码：{result_code}  信息：{result_info}")
+        # 达到最大重试次数
+        return False, log.error(f"登录失败，返回码：{result_code}  信息：{result_info}")
 
 
 def logout(account: str,
