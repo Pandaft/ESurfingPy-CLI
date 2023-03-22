@@ -1,3 +1,4 @@
+import socket
 from time import sleep
 
 from psutil import net_io_counters
@@ -28,3 +29,13 @@ class Net:
         if self.download:
             t += net_io_counter.bytes_recv
         return round(t / 1024 / 1024, 2)
+
+
+def is_networked():
+    """判断是否已联网"""
+    try:
+        socket.create_connection(("114.114.114.114", 53), timeout=2)
+        return True
+    except TimeoutError:
+        pass
+    return False

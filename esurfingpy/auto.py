@@ -2,7 +2,35 @@ import time
 
 from .esurfing import ESurfing
 from .log import log
-from .net import Net
+from .net import Net, is_networked
+
+
+def network(esf: ESurfing, interval: int, threshold: int):
+    """断网时自动重登校园网"""
+
+    # 最小间隔时间为 1 秒
+    if int(interval) < 1:
+        interval = 1
+
+    count = 0
+    while True:
+        time.sleep(interval)
+
+        # 检测网络
+        if is_networked():
+            count = 0
+            log.info("当前网络正常")
+            continue
+
+        # 网络断开
+        count += 1
+        log.warning(f"当前网络断开（{count} / {threshold}）")
+
+        # 重登校园网
+        if count >= threshold:
+            if not esf.login():
+                return log.error("登录失败")
+            count = 0
 
 
 def speed_mode(esf: ESurfing, mode: str, value: float, auto_stop: bool):
@@ -139,6 +167,7 @@ def manual_mode(esf: ESurfing):
 
 def relogin(esf: ESurfing, mode: str, value: float, auto_stop: bool):
     """
+        net, network          - 当网络断开时自动登录校园网
         uls, upload_speed     - 上行速率低于指定值时自动重登校园网
         dls, download_speed   - 下载速率低于指定值时自动重登校园网
         ult, upload_traffic   - 上传流量达到指定值时自动重登校园网
@@ -147,8 +176,12 @@ def relogin(esf: ESurfing, mode: str, value: float, auto_stop: bool):
         mul, manual           - 手动按回车后自动重登校园网
     """
 
+    # 网络模式
+    if mode == "net":
+        return network(esf, int(value), 5)
+
     # 速率模式
-    if mode in ["uls", "dls"]:
+    elif mode in ["uls", "dls"]:
         return speed_mode(esf, mode, value, auto_stop)
 
     # 流量模式

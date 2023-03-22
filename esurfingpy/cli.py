@@ -60,7 +60,7 @@ def cli_logout(esurfing_url, wlan_acip, wlan_userip, account, password, signatur
 
 
 @cli.command(name="auto")
-@click.option('-m', '--mode', prompt='触发模式', help='触发模式', type=click.Choice(["uls", "dls", "ult", "dlt", "itv", "mul"], case_sensitive=False))
+@click.option('-m', '--mode', prompt='触发模式', help='触发模式', type=click.Choice(["net", "uls", "dls", "ult", "dlt", "itv", "mul"], case_sensitive=False))
 @click.option('-t', '--threshold', prompt='触发阈值', type=float, help='触发网速(MB/s)或流量(MB)或时间(s)')
 @click.option('-s', '--auto-stop', prompt='自动停止', default=True, show_default=True, type=bool, help='自动停止(仅对网速模式有效)')
 @click.option('-u', '--esurfing-url', default=DEFAULT_ESURFING_URL, show_default=True, help='校园网登录网址')
@@ -72,6 +72,7 @@ def cli_logout(esurfing_url, wlan_acip, wlan_userip, account, password, signatur
 def cli_auto(mode, threshold, auto_stop, esurfing_url, wlan_acip, wlan_userip, account, password, verbose):
     """多种模式触发重登校园网"""
     # mode:
+    #     net, network          - 断网时自动重登校园网
     #     uls, upload_speed     - 上行速率低于指定值时自动重登校园网
     #     dls, download_speed   - 下载速率低于指定值时自动重登校园网
     #     ult, upload_traffic   - 上传流量达到指定值时自动重登校园网

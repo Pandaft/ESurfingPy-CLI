@@ -170,7 +170,7 @@ Usage: ESurfingPy-CLI.exe auto [OPTIONS]
   多种模式触发重登校园网
 
 Options:
-  -m, --mode [uls|dls|ult|dlt|itv|mul]
+  -m, --mode [net|uls|dls|ult|dlt|itv|mul]
                                   触发模式
   -t, --threshold FLOAT           触发网速(MB/s)或流量(MB)或时间(s)
   -s, --auto-stop BOOLEAN         自动停止(仅对网速模式有效)  [default: True]
@@ -187,6 +187,7 @@ Options:
 
 |  值  |                                   值备注 | 说明                                       |
 |:---:|--------------------------------------:|------------------------------------------|
+| net |                        <u>net</u>work | 每间隔指定的时间（s）检测网络，断网时自动重登校园网               |
 | uls |     <u>u</u>p<u>l</u>oad <u>s</u>peed | 实时监控**上传**速率（MB/s），连续 10s 低于指定值时自动重登校园网。 |
 | dls |   <u>d</u>own<u>l</u>oad <u>s</u>peed | 实时监控**下载**速率（MB/s），连续 10s 低于指定值时自动重登校园网。 |
 | ult |   <u>u</u>p<u>l</u>oad <u>t</u>raffic | 实时监控**上传**流量（MB），达到指定值时自动重登校园网。          |
@@ -196,11 +197,15 @@ Options:
 
 示例：
 
+- 间隔 5 秒检测网络，当网络断开时自动登录：
+
+`./ESurfingPy-CLI.exe auto -m net -t 5 -u 125.88.59.131:10001 -c 123.123.123.123 -r 234.234.234.234 -a 15012341234 -p 12345678 -v true`
+
 - 实时监控上传速率，连续 10s 低于 3MB/s 时自动重登：
 
 `./ESurfingPy-CLI.exe auto -m uls -t 3 -u 125.88.59.131:10001 -c 123.123.123.123 -r 234.234.234.234 -a 15012341234 -p 12345678 -v true`
 
-- 实时监控下载流量，达到 600MB 时自动重登： 
+- 实时监控下载流量，达到 600MB 时自动重登：
 
 `./ESurfingPy-CLI.exe auto -m dlt -t 600 -u 125.88.59.131:10001 -c 123.123.123.123 -r 234.234.234.234 -a 15012341234 -p 12345678 -v true`
 
