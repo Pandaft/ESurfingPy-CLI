@@ -1,6 +1,6 @@
-import socket
 from time import sleep
 
+import requests
 from psutil import net_io_counters
 
 
@@ -34,8 +34,8 @@ class Net:
 def is_networked():
     """判断是否已联网"""
     try:
-        socket.create_connection(("114.114.114.114", 53), timeout=2)
+        requests.get(url="https://baidu.com/", timeout=2)
         return True
-    except TimeoutError:
+    except requests.exceptions.ConnectTimeout:
         pass
     return False
