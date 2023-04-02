@@ -13,6 +13,7 @@ onnx_path = os.path.join(dir_path, onnx_name)
 
 os.system(
     f"pyinstaller "
+    f"--hidden-import PIL._tkinter_finder "
     f"--add-data {onnx_path}{separator}ddddocr "
     f"-n ESurfingPy-CLI "
     f"-F "

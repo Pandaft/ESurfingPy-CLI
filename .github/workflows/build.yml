@@ -30,8 +30,12 @@ jobs:
 
     - name: Install dependencies
       run: |
-        pip3 install -r requirements.txt
+        pip3 install -I -r requirements.txt
         pip3 install pyinstaller
+
+    - name: Install Tkinter for Ubuntu
+      if: ${{ matrix.os == 'ubuntu-20.04' }}
+      run: sudo apt-get install python3-tk
 
     - name: Build
       run: python build.py
