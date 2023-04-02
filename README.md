@@ -30,20 +30,26 @@
 
 ## 下载运行
 
-### 运行已编译的可执行文件
+### 运行已打包的可执行文件
 
-程序打包了识别验证码所需的模型文件，因此文件体积较大。
+> 程序打包了识别验证码所需的模型文件，因此文件体积较大。
+>
+> 由于 Python 不能交叉编译，在不同系统上存在差异，因此很可能无法正常运行。
+>
+> 已知 Win10, Win11, Ubuntu 22.10 测试正常，其余未测试，建议通过源码运行和自行~~编译~~打包。
 
-由 GitHub Actions 自动编译并发布，下载链接：[Releases(发行版)](https://github.com/Pandaft/ESurfingPy-CLI/releases)
+- 下载链接：[Releases](https://github.com/Pandaft/ESurfingPy-CLI/releases)
 
 ### 运行源码
 
-Python <= 3.10，Linux 可能需要将 `pip` 换为 `pip3`， `python` 换为 `python3`。
+> Python <= 3.10
+>
+> Linux 可能需要提前安装 tkinter
 
 ```shell
 git clone https://github.com/Pandaft/ESurfingPy-CLI.git
 cd ESurfingPy-CLI
-pip install -r requirements.txt
+pip install -I -r requirements.txt
 python main.py
 ```
 
