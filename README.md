@@ -4,7 +4,7 @@
 
 基于 Python 实现登录和登出广东天翼校园网网页认证的命令行工具。可以用该工具来快速登录或登出广东天翼校园网，或者反复重新登录来重置限速状态，以 “破解” 限速。
 
-![./docs/images/1.png](https://i.328888.xyz/2023/03/17/LxqcZ.png)
+![./docs/images/1.png](./docs/images/1.png)
 
 <br />
 
@@ -12,11 +12,11 @@
 
 ### 图形界面
 
-![./docs/images/gui.gif](https://i.328888.xyz/2023/03/17/Lxaxy.gif)
+![./docs/images/gui.gif](./docs/images/gui.gif)
 
 ### 命令行
 
-![./docs/images/cli.gif](https://i.328888.xyz/2023/03/17/LxTl3.gif)
+![./docs/images/cli.gif](./docs/images/cli.gif)
 
 <br />
 
@@ -59,7 +59,7 @@ python main.py
 
 设备刚连上校园网络时自动弹出的，或者已经连上但未登录时打开任意网页跳转到下面这个登录网页，其中有此程序要的参数：
 
-![./docs/images/2.png](https://i.328888.xyz/2023/03/17/LxYn8.png)
+![./docs/images/2.png](./docs/images/2.png)
 
 1. `ESurfingURL` ：校园网登录网址（部分），需要带端口。未登录时可能会出现域名解析错误（未能连接DNS服务器），可以先手动登录校园网后，使用 ping 等网络工具解析，然后用 `IP:端口` 代替，例如：`125.88.59.131:10001`
 2. `WlanACIP` ：校园网的认证服务器IP，应该每个学校都不同；
@@ -223,7 +223,7 @@ Options:
 
 利用快捷方式，可以实现带参数启用程序：
 
-![./docs/images/3.png](https://i.328888.xyz/2023/03/17/LxMQv.png)
+![./docs/images/3.png](./docs/images/3.png)
 
 记得不要移动原文件，否则快捷方式会不可用。
 
@@ -239,9 +239,9 @@ Options:
 
 ## 免责声明
 
-此项目仅供研究、学习和交流，请勿用于商业或非法用途，开发者与协作者不对使用者负任何法律责任，使用者自行承担因不当使用所产生的后果与责任。
+**此项目仅供研究、学习和交流，请勿用于商业或非法用途，开发者与协作者不对使用者负任何法律责任，使用者自行承担因不当使用所产生的后果与责任。**
 
-This project is only for research, learning and exchange. Do not use it for commercial or illegal purposes. Developers and collaborators do not assume any legal responsibility for users. Users bear the consequences and responsibilities arising from improper use.
+**This project is only for research, learning and exchange. Do not use it for commercial or illegal purposes. Developers and collaborators do not assume any legal responsibility for users. Users bear the consequences and responsibilities arising from improper use.**
 
 <br />
 
