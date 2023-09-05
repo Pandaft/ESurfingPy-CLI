@@ -249,4 +249,4 @@ Options:
 
 如果此项目对你有帮助，求点个 ★ ！
 
-项目QQ群讨论群：791455104
+项目QQ群讨论群：791455104（[点此加入](http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=yTA84KiemCppMD5Y2CDepUsnVRo59dOS&authKey=CH%2Bb2yFiTVPqLOjdwrEGXGVvmhWTURTFX8yM5eRA7ipWh5fOKAIpJRqCKDIWZT7V&noverify=0&group_code=791455104)）
