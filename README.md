@@ -42,14 +42,12 @@
 
 ### 运行源码
 
-> Python <= 3.10
->
-> Linux 可能需要提前安装 tkinter
+> 建议 Python <= 3.10 ，无图形界面 Linux 可能需要提前安装 tkinter。
 
 ```shell
 git clone https://github.com/Pandaft/ESurfingPy-CLI.git
 cd ESurfingPy-CLI
-pip install -I -r requirements.txt
+pip install -I -r requirements.txt  # 记得加上 -I 参数  
 python main.py
 ```
 
