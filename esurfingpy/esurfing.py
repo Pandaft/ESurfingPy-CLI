@@ -6,8 +6,7 @@ import time
 import requests
 import rsa
 
-from . import ocr
-from .log import log
+from . import log, ocr
 
 DEFAULT_ESURFING_URL = "enet.10000.gd.cn:10001"
 

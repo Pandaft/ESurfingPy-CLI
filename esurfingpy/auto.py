@@ -1,7 +1,7 @@
 import time
 
+from . import log
 from .esurfing import ESurfing
-from .log import log
 from .net import Net, is_online
 
 

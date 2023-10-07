@@ -5,35 +5,37 @@ from rich.logging import RichHandler
 logging.basicConfig(
     level="INFO",
     format="%(message)s",
-    datefmt="[%X]",
-    handlers=[RichHandler()]
+    datefmt="[%Y-%m-%d %H:%M:%S]",
+    handlers=[RichHandler(
+        show_path=False,
+        markup=True,
+        rich_tracebacks=True,
+    )]
 )
 
-
-class Logger(logging.Logger):
-
-    def __new__(cls, name):
-        return logging.getLogger(name)
-
-    def debug(self, msg: object, *args, **kwargs) -> object:
-        super().debug(msg, *args, **kwargs)
-        return msg
-
-    def info(self, msg: object, *args, **kwargs) -> object:
-        super().info(msg, *args, **kwargs)
-        return msg
-
-    def warning(self, msg: object, *args, **kwargs) -> object:
-        super().warning(msg, *args, **kwargs)
-        return msg
-
-    def error(self, msg: object, *args, **kwargs) -> object:
-        super().error(msg, *args, **kwargs)
-        return msg
-
-    def critical(self, msg: object, *args, **kwargs) -> object:
-        super().critical(msg, *args, **kwargs)
-        return msg
+logger = logging.getLogger("rich")
 
 
-log = Logger("rich")
+def debug(msg, *args, **kwargs):
+    logger.debug(msg, *args, **kwargs)
+    return msg
+
+
+def info(msg, *args, **kwargs):
+    logger.info(msg, *args, **kwargs)
+    return msg
+
+
+def warning(msg, *args, **kwargs):
+    logger.warning(msg, *args, **kwargs)
+    return msg
+
+
+def error(msg, *args, **kwargs):
+    logger.error(msg, *args, **kwargs)
+    return msg
+
+
+def critical(msg, *args, **kwargs):
+    logger.critical(msg, *args, **kwargs)
+    return msg

@@ -3,7 +3,7 @@ from time import sleep
 import requests
 from psutil import net_io_counters
 
-from .log import log
+from . import log
 
 
 class Net:
