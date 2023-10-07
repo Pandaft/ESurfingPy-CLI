@@ -1,10 +1,13 @@
 # IDE
-.idea
+/.idea/
+
+# Env
+/venv/
 
 # PyInstaller
-build
-dist
-*.spec
+/build/
+/dist/
+/*.spec
 
 # Data
-*.json
+/*.json
