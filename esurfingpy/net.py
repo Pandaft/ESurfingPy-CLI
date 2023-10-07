@@ -3,6 +3,8 @@ from time import sleep
 import requests
 from psutil import net_io_counters
 
+from .log import log
+
 
 class Net:
 
@@ -31,11 +33,19 @@ class Net:
         return round(t / 1024 / 1024, 2)
 
 
-def is_networked():
+def is_online(retries=3, timeout=2):
     """判断是否已联网"""
-    try:
-        requests.get(url="https://baidu.com/", timeout=2)
-        return True
-    except requests.exceptions.ConnectTimeout:
-        pass
+    retries = 1 if retries < 1 else retries
+    timeout = 1 if timeout < 1 else timeout
+    for r in range(retries):
+        try:
+            requests.get(url="https://www.baidu.com/", timeout=timeout)
+            log.info("当前网络正常")
+            return True
+        except requests.exceptions.Timeout:
+            log.warning(f"当前网络异常（{r + 1}/{retries}）：请求超时")
+        except Exception as exc:
+            log.warning(f"网络请求异常（{r + 1}/{retries}）：{exc}")
+        sleep(1)
+    log.error("当前网络断开")
     return False
