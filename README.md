@@ -2,7 +2,8 @@
 
 ## 简介
 
-基于 Python 实现登录和登出广东天翼校园网网页认证的命令行工具。可以用该工具来快速登录或登出广东天翼校园网，或者反复重新登录来重置限速状态，以 “破解” 限速。
+基于 Python 实现登录和登出广东天翼校园网网页认证的命令行工具。可以用该工具来快速登录或登出广东天翼校园网，
+或者反复重新登录来重置限速状态，以 “破解” 限速。
 
 ![./docs/images/1.png](./docs/images/1.png)
 
@@ -22,9 +23,13 @@
 
 ## 适用学校
 
-> 小道消息，广东天翼校园网于2021年10月20日，凌晨期间“优化”了校园网，实则是关闭了部分学校的网页认证通道。一些学校原本只是前端网页删除或屏蔽了登录相关组件的学校，其实还是可以使用类似此项目相关的基于网页认证的程序实现网页登录，但关闭认证通道后就彻底用不了（提示 `已办理一人一号多终端业务的用户，请使用客户端登录` 或 `当前该账号的拨号方式错误` ）。此项目不再适用于这些学校，目前只适用于没有关闭网页认证通道的广东天翼校园网。
+> 小道消息，广东天翼校园网于2021年10月20日，凌晨期间“优化”了校园网，实则是关闭了部分学校的网页认证通道。
+> 一些学校原本只是前端网页删除或屏蔽了登录相关组件的学校，其实还是可以使用类似此项目相关的基于网页认证的
+> 程序实现网页登录，但关闭认证通道后就彻底用不了（提示 `已办理一人一号多终端业务的用户，请使用客户端登录` 
+> 或 `当前该账号的拨号方式错误` ）。此项目不再适用于这些学校，只适用于没有关闭网页认证的广东天翼校园网。
 
-如果你的学校校园网是广东天翼校园网，欢迎使用并反馈项目适用情况：[discussion#3](https://github.com/Pandaft/ESurfingPy-CLI/discussions/3)
+如果你的学校校园网是广东天翼校园网，欢迎使用并反馈项目适用情况：
+[discussion#3](https://github.com/Pandaft/ESurfingPy-CLI/discussions/3)
 
 <br />
 
@@ -227,7 +232,8 @@ Options:
 
 ### 2. Win10 开机自动登录校园网
 
-根据上述制作一个登录的快捷方式，然后按下 `Win` + `R` 输入 `shell:startup` 并确定，将登录的快捷方式拖进弹出的窗口，如果杀毒软件提示有程序想自启就点允许就可以了。
+根据上述制作一个登录的快捷方式，然后按下 `Win` + `R` 输入 `shell:startup` 并确定，
+将登录的快捷方式拖进弹出的窗口，如果杀毒软件提示有程序想自启就点允许就可以了。
 
 ### 3. 更多
 
@@ -235,16 +241,36 @@ Options:
 
 <br />
 
+## 项目不足
+
+由于使用 Python 语言开发：
+
+- 运行效率较低，特别是打包后的可执行文件，在打开时需要较长的加载时间；
+- 不能交叉编译，对应平台的可执行文件需要对应的平台进行打包，对于拥有百花齐放拥有众多发行版的 Linux 来说，Ubuntu 打包的却不一定能在 Debian 中运行；
+ 
+由于使用网页认证接口实现核心登录和登出功能：
+
+- 部分学校禁用了网页认证登录，只能通过客户端登录，该项目不适合这部分学校；
+- 需要提交验证码，项目通过使用 ddddocr 库来识别验证码，但是在打包时需要将模型文件也打包进行，带来额外的文件体积，而且部分系统可能无法运行。
+
+而以上不足，都在我的新项目 [go-esurfing](https://github.com/Pandaft/go-esurfing) 中得到解决。
+
+<br />
+
 ## 免责声明
 
-**此项目仅供研究、学习和交流，请勿用于商业或非法用途，开发者与协作者不对使用者负任何法律责任，使用者自行承担因不当使用所产生的后果与责任。**
+**此项目仅供研究、学习和交流，请勿用于商业或非法用途，
+开发者与协作者不对使用者负任何法律责任，
+使用者自行承担因不当使用所产生的后果与责任。**
 
-**This project is only for research, learning and exchange. Do not use it for commercial or illegal purposes. Developers and collaborators do not assume any legal responsibility for users. Users bear the consequences and responsibilities arising from improper use.**
+**This project is only for research, learning and exchange. 
+Do not use it for commercial or illegal purposes. 
+Developers and collaborators do not assume any legal responsibility for users. 
+Users bear the consequences and responsibilities arising from improper use.**
 
 <br />
 
 ## 其他
 
-如果此项目对你有帮助，求点个 ★ ！
-
-项目QQ群讨论群：791455104（[点此加入](http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=yTA84KiemCppMD5Y2CDepUsnVRo59dOS&authKey=CH%2Bb2yFiTVPqLOjdwrEGXGVvmhWTURTFX8yM5eRA7ipWh5fOKAIpJRqCKDIWZT7V&noverify=0&group_code=791455104)）
+广东天翼校园网 QQ 交流群：791455104
+（[点此加入](http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=yTA84KiemCppMD5Y2CDepUsnVRo59dOS&authKey=CH%2Bb2yFiTVPqLOjdwrEGXGVvmhWTURTFX8yM5eRA7ipWh5fOKAIpJRqCKDIWZT7V&noverify=0&group_code=791455104)）
