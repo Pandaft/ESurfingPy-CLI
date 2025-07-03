@@ -6,7 +6,6 @@ import click
 from . import esurfing
 from .__version__ import __version__, __date__
 from .auto import relogin
-from .gui import Gui
 from .ocr import ocr_image
 
 DEFAULT_ESURFING_URL = "enet.10000.gd.cn:10001"
@@ -22,7 +21,12 @@ def cli():
 @click.option('-h', '--hide-console', type=bool, default=True, show_default=True, help='隐藏控制台（仅适用于 Windows）')
 def cli_gui(hide_console):
     """启动图形界面"""
-    Gui(hide_console=hide_console).run()
+    try:
+        from .gui import Gui
+        Gui(hide_console=hide_console).run()
+    except ImportError as e:
+        click.echo(f"错误：无法启动图形界面，可能缺少GUI依赖库或运行在无图形环境中: {e}")
+        return
 
 
 @cli.command(name="login")
