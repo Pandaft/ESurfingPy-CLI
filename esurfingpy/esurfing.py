@@ -75,7 +75,7 @@ def get_parameters(verbose: bool = False):
 
 def login(account: str, password: str,
           esurfingurl: str = DEFAULT_ESURFING_URL, wlanacip: str = "", wlanuserip: str = "",
-          retry: int = 5, verbose: bool = True):
+          retry: int = 10, verbose: bool = True):
     """
     登录校园网
     account, password 必填参数；
@@ -226,6 +226,9 @@ def login(account: str, password: str,
             return True, resp.cookies['signature']
 
         log_data['times'] += 1
+        if log_data['times'] >= retry:
+            log.error(f"登录失败，返回码：{result_code}  信息：{result_info}")
+            return False, log.warning(f"已达到最大重试次数：{retry}，停止尝试登录")
 
         # 问题不大
         if result_code in [
