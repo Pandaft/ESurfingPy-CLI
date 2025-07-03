@@ -15,7 +15,7 @@ jobs:
       dist-name: ESurfingPy-CLI
     strategy:
       matrix:
-        os: [windows-2019, ubuntu-20.04, macos-11.0]
+        os: [windows-2022, ubuntu-22.04, macos-13]
         python-version: ['3.10']
 
     steps:
