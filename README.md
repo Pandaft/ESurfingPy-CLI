@@ -48,7 +48,7 @@
 
 ### 运行源码
 
-> 建议 Python <= 3.10 ，无图形界面 Linux 可能需要提前安装 tkinter。
+建议 Python 3.10
 
 ```shell
 git clone https://github.com/Pandaft/ESurfingPy-CLI.git
